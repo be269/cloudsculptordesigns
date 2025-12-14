@@ -38,21 +38,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="group bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden animate-fade-in">
       <Link href={`/products/${product.slug}`}>
         <div className="relative h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden">
-          {/* Placeholder for product image */}
-          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
-            <div className="text-center p-4">
-              <div className="text-6xl mb-2">🎨</div>
-              <p className="text-xs">{product.category}</p>
-            </div>
-          </div>
-          {/* When you add real images, uncomment:
           <Image
             src={product.image}
             alt={product.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          */}
         </div>
 
         <div className="p-4">

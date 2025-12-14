@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
@@ -59,11 +60,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-            <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-9xl mb-4">🎨</div>
-                <p className="text-gray-500 dark:text-gray-400">{product.category}</p>
-              </div>
+            <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden relative">
+              <Image
+                src={product.image}
+                alt={product.title}
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
 
