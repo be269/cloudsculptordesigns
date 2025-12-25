@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import to avoid SSR issues with Three.js
@@ -9,6 +10,9 @@ const STLViewerInteractive = dynamic(
 );
 
 export default function TestViewerPage() {
+  const [colorIndex, setColorIndex] = useState(0);
+  const [sizeIndex, setSizeIndex] = useState(1);
+
   return (
     <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "#161c29" }}>
       <div className="max-w-4xl mx-auto">
@@ -20,6 +24,9 @@ export default function TestViewerPage() {
           <STLViewerInteractive
             modelUrl="/models/Alien_1.stl"
             className="w-full h-full"
+            colorIndex={colorIndex}
+            sizeIndex={sizeIndex}
+            onColorChange={setColorIndex}
           />
         </div>
 

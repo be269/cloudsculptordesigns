@@ -43,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       }}
     >
       <Link href={`/products/${product.slug}`}>
-        <div className="relative h-64 overflow-hidden" style={{ backgroundColor: '#2a3649' }}>
+        <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden" style={{ backgroundColor: '#2a3649' }}>
           <Image
             src={product.image}
             alt={product.title}

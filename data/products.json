@@ -12,9 +12,21 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/642330385",
-      "notes": "Handmade, made to order",
+      "notes": "Made to order. Brain is clear/translucent white unless otherwise specified.",
       "slug": "3d-printed-brain-lamp",
-      "image": "/images/products/3d-printed-brain-lamp.jpg"
+      "hideColorOptions": true,
+      "image": "/images/products/brain-lamp-01.jpg",
+      "additionalImages": [
+          "/images/products/brain-lamp-02.jpg",
+          "/images/products/brain-lamp-03.jpg",
+          "/images/products/brain-lamp-04.jpg",
+          "/images/products/brain-lamp-05.jpg",
+          "/images/products/brain-lamp-06.jpg",
+          "/images/products/brain-lamp-07.jpg",
+          "/images/products/brain-lamp-08.jpg",
+          "/images/products/brain-lamp-09.jpg",
+          "/images/products/brain-lamp-10.jpg"
+      ]
   },
   {
       "id": "660738472",
@@ -31,7 +43,21 @@
       "etsyUrl": "https://www.etsy.com/listing/660738472",
       "notes": "Educational, medical",
       "slug": "life-size-3d-printed-brain",
-      "image": "/images/products/life-size-3d-printed-brain.jpg"
+      "image": "/images/products/brain-model-01.jpg",
+      "additionalImages": [
+          "/images/products/brain-model-02.jpg",
+          "/images/products/brain-model-03.jpg",
+          "/images/products/brain-model-04.jpg",
+          "/images/products/brain-model-05.jpg",
+          "/images/products/brain-model-06.jpg",
+          "/images/products/brain-model-07.jpg",
+          "/images/products/brain-model-08.jpg",
+          "/images/products/brain-model-09.jpg",
+          "/images/products/brain-model-10.jpg",
+          "/images/products/brain-model-11.jpg"
+      ],
+      "modelUrl": "/models/brain.stl",
+      "defaultColorIndex": 16
   },
   {
       "id": "1755820026",
@@ -46,9 +72,12 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1755820026",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "magic-lamp-incense-holder",
-      "image": "/images/products/magic-lamp-incense-holder.jpg"
+      "image": "/images/products/magic-lamp-incense-holder.jpg",
+      "modelUrl": "/models/magic_lamp.stl",
+      "useCompositeLampViewer": true,
+      "defaultColorIndex": 23
   },
   {
       "id": "1315553004",
@@ -63,7 +92,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1315553004",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "articulated-asian-style-dragon",
       "image": "/images/products/articulated-asian-style-dragon.jpg"
   },
@@ -80,7 +109,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1315551212",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "3d-printed-articulated-skeletal-dragon",
       "image": "/images/products/3d-printed-articulated-skeletal-dragon.jpg"
   },
@@ -97,7 +126,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1315547148",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "3d-printed-articulated-steampunk-dragon",
       "image": "/images/products/3d-printed-articulated-steampunk-dragon.jpg"
   },
@@ -114,7 +143,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1523259675",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "rock-dragon-3d-printed",
       "image": "/images/products/rock-dragon-3d-printed.jpg"
   },
@@ -131,7 +160,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/821915019",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "dragon-flexi-3d-printed-articulated",
       "image": "/images/products/dragon-flexi-3d-printed-articulated.jpg"
   },
@@ -148,9 +177,22 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1682167000",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "forest-goddess-planter",
-      "image": "/images/products/forest-goddess-planter.jpg"
+      "image": "/images/products/forest-goddess-01.jpg",
+      "additionalImages": [
+          "/images/products/forest-goddess-02.jpg",
+          "/images/products/forest-goddess-03.jpg",
+          "/images/products/forest-goddess-04.jpg",
+          "/images/products/forest-goddess-05.jpg",
+          "/images/products/forest-goddess-06.jpg",
+          "/images/products/forest-goddess-07.jpg",
+          "/images/products/forest-goddess-08.jpg",
+          "/images/products/forest-goddess-09.jpg"
+      ],
+      "modelUrl": "/models/forest_goddess.stl",
+      "useCompositeGoddessViewer": true,
+      "defaultColorIndex": 29
   },
   {
       "id": "849039675",
@@ -160,14 +202,15 @@
       "description": "Retro-style rocket ship desk toy or cake topper.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 6\" tall",
-      "features": ["Retro design", "Desk toy", "Cake topper"],
+      "features": ["Retro design", "Desk toy", "Cake topper", "55 color options available"],
       "stock": 876,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/849039675",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "retro-style-rocket-ship",
-      "image": "/images/products/retro-style-rocket-ship.jpg"
+      "image": "/images/products/retro-style-3d-printed-rocket-ship-large.jpg",
+      "modelUrl": "/models/retro_rocket.stl"
   },
   {
       "id": "670103618",
@@ -182,9 +225,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/670103618",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "dragon-egg-3d-printed",
-      "image": "/images/products/dragon-egg-3d-printed.jpg"
+      "image": "/images/products/dragon-cup.jpg"
   },
   {
       "id": "1506319826",
@@ -194,7 +237,7 @@
       "description": "Thoughtful Sci-Fi desk decor and conversation starter.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 4\" tall",
-      "features": ["Alien design", "Desk decor", "Conversation starter", "54 color options available"],
+      "features": ["Alien design", "Desk decor", "Conversation starter", "55 color options available"],
       "stock": 953,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
@@ -202,7 +245,9 @@
       "notes": "Eyes will be black on actual print (unless specified in order notes)",
       "slug": "alien-visitor-2",
       "image": "/images/products/alien-visitor-2.jpg",
-      "modelUrl": "/models/Alien_1.stl"
+      "modelUrl": "/models/et2_body.stl",
+      "useCompositeAlien2Viewer": true,
+      "defaultColorIndex": 6
   },
   {
       "id": "1504036004",
@@ -212,7 +257,7 @@
       "description": "Sci-Fi alien figurine for desk decoration.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 4 inches tall",
-      "features": ["Alien design", "Desk decor", "Collectible", "54 color options available"],
+      "features": ["Alien design", "Desk decor", "Collectible", "55 color options available"],
       "stock": 936,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
@@ -220,7 +265,8 @@
       "notes": "Eyes will be black on actual print (unless specified in order notes)",
       "slug": "3d-printed-alien-figurine",
       "image": "/images/products/3d-printed-alien-figurine.jpg",
-      "modelUrl": "/models/Alien_1.stl"
+      "modelUrl": "/models/Alien_1.stl",
+      "defaultColorIndex": 6
   },
   {
       "id": "1557901842",
@@ -235,9 +281,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1557901842",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "midgard-serpent-jormungandr",
-      "image": "/images/products/midgard-serpent-jormungandr.jpg"
+      "image": "/images/products/asian-dragon-wine-holder.jpg"
   },
   {
       "id": "1323402183",
@@ -252,9 +298,19 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1323402183",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "oni-devil-sculpture",
-      "image": "/images/products/oni-devil-sculpture.jpg"
+      "image": "/images/products/oni-devil-1.jpg",
+      "additionalImages": [
+          "/images/products/oni-devil-2.jpg",
+          "/images/products/oni-devil-3.jpg",
+          "/images/products/oni-devil-4.jpg",
+          "/images/products/oni-devil-5.jpg",
+          "/images/products/oni-devil-6.jpg",
+          "/images/products/oni-devil-7.jpg"
+      ],
+      "modelUrl": "/models/oni_wall_mask.stl",
+      "modelRotationX": 90
   },
   {
       "id": "1701804727",
@@ -269,7 +325,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1701804727",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "behind-oni-wall-mask",
       "image": "/images/products/behind-oni-wall-mask.jpg"
   },
@@ -286,7 +342,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1504035698",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "gorilla-flexible-3d-printed",
       "image": "/images/products/gorilla-flexible-3d-printed.jpg"
   },
@@ -303,9 +359,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1699830749",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "female-face-fidget-toy",
-      "image": "/images/products/female-face-fidget-toy.jpg"
+      "image": "/images/products/female-face-fidget-toy-pixels.jpg"
   },
   {
       "id": "1604860610",
@@ -315,14 +371,16 @@
       "description": "Robot hand design controller holder for gaming setup.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 6 inches tall",
-      "features": ["Controller holder", "Robot design", "Gaming accessory"],
+      "features": ["Controller holder", "Robot design", "Gaming accessory", "55 color options available"],
       "stock": 971,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1604860610",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "robot-hand-controller-holder",
-      "image": "/images/products/robot-hand-controller-holder.jpg"
+      "image": "/images/products/robot-hand-controller-holder.jpg",
+      "modelUrl": "/models/robot_hand.stl",
+      "defaultColorIndex": 23
   },
   {
       "id": "1682159900",
@@ -337,7 +395,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1682159900",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "futuristic-cityscape-head-planter",
       "image": "/images/products/futuristic-cityscape-head-planter.jpg"
   },
@@ -354,7 +412,7 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/583808043",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "geared-heart-3d-printed",
       "image": "/images/products/geared-heart-3d-printed.jpg"
   },
@@ -371,26 +429,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/889337326",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "life-size-brick-block-flowers",
       "image": "/images/products/life-size-brick-block-flowers.jpg"
-  },
-  {
-      "id": "1501872168",
-      "title": "Custom 3D Printed Painting - One-of-a-Kind Artwork",
-      "price": 14.99,
-      "category": "Art",
-      "description": "Custom 3D printed painting from your photo or idea.",
-      "materials": "PLA Plastic, 3D-printed",
-      "dimensions": "Custom sizes available",
-      "features": ["Custom design", "One-of-a-kind", "From your photo"],
-      "stock": 1,
-      "shippingCost": "FREE",
-      "shippingTime": "Ships within 1 week",
-      "etsyUrl": "https://www.etsy.com/listing/1501872168",
-      "notes": "Custom order",
-      "slug": "custom-3d-printed-painting",
-      "image": "/images/products/custom-3d-printed-painting.jpg"
   },
   {
       "id": "558680787",
@@ -405,9 +446,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/558680787",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "dragon-egg-lamp",
-      "image": "/images/products/dragon-egg-lamp.jpg"
+      "image": "/images/products/dragon-cup.jpg"
   },
   {
       "id": "800232011",
@@ -422,9 +463,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/800232011",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "brick-block-flower-single",
-      "image": "/images/products/brick-block-flower-single.jpg"
+      "image": "/images/products/brick-block-flower-petals.jpg"
   },
   {
       "id": "744097483",
@@ -456,9 +497,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1648723855",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "brick-block-lightsaber",
-      "image": "/images/products/brick-block-lightsaber.jpg"
+      "image": "/images/products/brick-block-light-saber.jpg"
   },
   {
       "id": "1666685590",
@@ -473,9 +514,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1666685590",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "demon-rhino-monster-ushi",
-      "image": "/images/products/demon-rhino-monster-ushi.jpg"
+      "image": "/images/products/ushi-creature.jpg"
   },
   {
       "id": "822773564",
@@ -490,9 +531,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/822773564",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "octopus-articulated",
-      "image": "/images/products/octopus-articulated.jpg"
+      "image": "/images/products/adorable-octopus.jpg"
   },
   {
       "id": "884958937",
@@ -502,14 +543,16 @@
       "description": "Retro style rocket ship for desk or cake topper.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 5 inches tall",
-      "features": ["Retro design", "Desk toy", "Cake topper"],
+      "features": ["Retro design", "Desk toy", "Cake topper", "55 color options available"],
       "stock": 955,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/884958937",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "3d-printed-rocket-ship",
-      "image": "/images/products/3d-printed-rocket-ship.jpg"
+      "image": "/images/products/retro-style-3d-printed-rocket-ship-large.jpg",
+      "modelUrl": "/models/retro_rocket.stl",
+      "defaultColorIndex": 0
   },
   {
       "id": "1319272565",
@@ -519,14 +562,29 @@
       "description": "Traditional Foo Lion guardian sculpture.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 5 inches tall",
-      "features": ["Traditional design", "Guardian statue", "Detailed"],
+      "features": ["Traditional design", "Guardian statue", "Detailed", "55 color options available"],
       "stock": 997,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1319272565",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "foo-lion-statue",
-      "image": "/images/products/foo-lion-statue.jpg"
+      "image": "/images/products/foo-lion-1.jpg",
+      "additionalImages": [
+          "/images/products/foo-lion-2.jpg",
+          "/images/products/foo-lion-3.jpg",
+          "/images/products/foo-lion-4.jpg",
+          "/images/products/foo-lion-5.jpg",
+          "/images/products/foo-lion-6.jpg",
+          "/images/products/foo-lion-7.jpg",
+          "/images/products/foo-lion-8.jpg",
+          "/images/products/foo-lion-9.jpg",
+          "/images/products/foo-lion-10.jpg"
+      ],
+      "modelUrl": "/models/foo_lion.stl",
+      "defaultColorIndex": 23,
+      "modelRotationX": 90,
+      "modelRotationY": 0
   },
   {
       "id": "1695129461",
@@ -541,9 +599,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1695129461",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "alien-pilot-hover-pod",
-      "image": "/images/products/alien-pilot-hover-pod.jpg"
+      "image": "/images/products/alien-pilot-mask.jpg"
   },
   {
       "id": "674800705",
@@ -553,14 +611,16 @@
       "description": "Detailed castle inspired by German architecture.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 8 inches tall",
-      "features": ["Castle design", "Detailed architecture", "Display piece"],
+      "features": ["Castle design", "Detailed architecture", "Display piece", "55 color options available"],
       "stock": 957,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/674800705",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "3d-printed-castle",
-      "image": "/images/products/3d-printed-castle.jpg"
+      "image": "/images/products/german-castle.jpg",
+      "modelUrl": "/models/castle.stl",
+      "defaultColorIndex": 13
   },
   {
       "id": "713662301",
@@ -575,9 +635,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/713662301",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "dragon-egg-box-container",
-      "image": "/images/products/dragon-egg-box-container.jpg"
+      "image": "/images/products/dragon-cup.jpg"
   },
   {
       "id": "1711255588",
@@ -592,9 +652,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1711255588",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "alien-hand-controller-holder",
-      "image": "/images/products/alien-hand-controller-holder.jpg"
+      "image": "/images/products/alien-hand.jpg"
   },
   {
       "id": "1653638491",
@@ -609,9 +669,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1653638491",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "adorable-octopus-buddy",
-      "image": "/images/products/adorable-octopus-buddy.jpg"
+      "image": "/images/products/adorable-octopus.jpg"
   },
   {
       "id": "707568795",
@@ -626,9 +686,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/707568795",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "3d-printed-sugar-skull",
-      "image": "/images/products/3d-printed-sugar-skull.jpg"
+      "image": "/images/products/sugar-skull.jpg"
   },
   {
       "id": "1741891811",
@@ -643,9 +703,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1741891811",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "rotating-face-planter-oni",
-      "image": "/images/products/rotating-face-planter-oni.jpg"
+      "image": "/images/products/rotating-face-planter.jpg"
   },
   {
       "id": "548465135",
@@ -660,9 +720,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/548465135",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "dragon-egg-got-inspired",
-      "image": "/images/products/dragon-egg-got-inspired.jpg"
+      "image": "/images/products/dragon-cup.jpg"
   },
   {
       "id": "674797795",
@@ -677,9 +737,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/674797795",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "celtic-skull-sculpture",
-      "image": "/images/products/celtic-skull-sculpture.jpg"
+      "image": "/images/products/celtic-skull.jpg"
   },
   {
       "id": "525785586",
@@ -696,7 +756,7 @@
       "etsyUrl": "https://www.etsy.com/listing/525785586",
       "notes": "Decorative only",
       "slug": "dragon-wine-goblet",
-      "image": "/images/products/dragon-wine-goblet.jpg"
+      "image": "/images/products/dragon-cup.jpg"
   },
   {
       "id": "1383119142",
@@ -713,7 +773,7 @@
       "etsyUrl": "https://www.etsy.com/listing/1383119142",
       "notes": "Kit requires assembly",
       "slug": "mechanical-king-kong",
-      "image": "/images/products/mechanical-king-kong.jpg"
+      "image": "/images/products/kong-mech-robot.jpg"
   },
   {
       "id": "636722583",
@@ -723,14 +783,17 @@
       "description": "Rocket ship blasting off, fully assembled.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 6 inches tall",
-      "features": ["Blasting off design", "Fully assembled", "Display piece"],
+      "features": ["Blasting off design", "Fully assembled", "Display piece", "55 color options available"],
       "stock": 953,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/636722583",
-      "notes": "Handmade",
+      "notes": "Smoke plume will be white unless specified in order notes",
       "slug": "rocket-ship-blasting-off",
-      "image": "/images/products/rocket-ship-blasting-off.jpg"
+      "image": "/images/products/retro-style-3d-printed-rocket-ship-large.jpg",
+      "modelUrl": "/models/rocket_with_plume.stl",
+      "defaultColorIndex": 0,
+      "useCompositeRocketViewer": true
   },
   {
       "id": "1733102835",
@@ -740,14 +803,16 @@
       "description": "Chinese dragon wine bottle holder for fantasy decor.",
       "materials": "PLA Plastic, 3D-printed",
       "dimensions": "Approximately 8 inches",
-      "features": ["Wine bottle holder", "Dragon design", "Fantasy decor"],
+      "features": ["Wine bottle holder", "Dragon design", "Fantasy decor", "55 color options available"],
       "stock": 997,
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1733102835",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "chinese-dragon-wine-holder",
-      "image": "/images/products/chinese-dragon-wine-holder.jpg"
+      "image": "/images/products/asian-dragon-wine-holder.jpg",
+      "modelUrl": "/models/chinese_dragon.stl",
+      "defaultColorIndex": 22
   },
   {
       "id": "1731462567",
@@ -762,9 +827,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1731462567",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "bear-wine-bottle-holder",
-      "image": "/images/products/bear-wine-bottle-holder.jpg"
+      "image": "/images/products/bear-wine-holder.jpg"
   },
   {
       "id": "1731464497",
@@ -779,9 +844,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1731464497",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "stiletto-wine-bottle-holder",
-      "image": "/images/products/stiletto-wine-bottle-holder.jpg"
+      "image": "/images/products/stiletto-wine-holder.jpg"
   },
   {
       "id": "1717272466",
@@ -796,9 +861,9 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1717272466",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "octopus-wine-bottle-holder",
-      "image": "/images/products/octopus-wine-bottle-holder.jpg"
+      "image": "/images/products/octopus-wine-holder.jpg"
   },
   {
       "id": "1715686857",
@@ -813,8 +878,8 @@
       "shippingCost": "FREE",
       "shippingTime": "Ships within 1 week",
       "etsyUrl": "https://www.etsy.com/listing/1715686857",
-      "notes": "Handmade",
+      "notes": "",
       "slug": "alien-wine-bottle-holder",
-      "image": "/images/products/alien-wine-bottle-holder.jpg"
+      "image": "/images/products/alien-wine-holder.jpg"
   }
 ]

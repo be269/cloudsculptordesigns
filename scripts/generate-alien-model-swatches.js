@@ -73,12 +73,12 @@ const TRI_COLORS = [
 ];
 
 // Settings
-const SWATCH_SIZE = 150;  // Increased size
-const LABEL_HEIGHT = 32;
-const PADDING = 16;
+const SWATCH_SIZE = 180;  // Larger swatches for better visibility
+const LABEL_HEIGHT = 50;  // More space for larger text
+const PADDING = 20;
 const GRID_BORDER = 2;    // Border thickness
-const COLS_PER_ROW = 7;   // Fewer per row since they're bigger
-const SECTION_PADDING = 30;
+const COLS_PER_ROW = 6;   // Fewer per row for larger swatches
+const SECTION_PADDING = 40;
 
 // Load the STL file
 function loadSTL(filePath) {
@@ -320,11 +320,11 @@ function drawSection(ctx, title, colors, startY, geometry, isMetallic = false, t
 
   // Draw section title
   ctx.fillStyle = '#4A9FD4';
-  ctx.font = 'bold 18px Arial';
+  ctx.font = 'bold 26px Arial';
   ctx.textAlign = 'left';
   ctx.fillText(title, PADDING, startY);
 
-  const colorsStartY = startY + 30;
+  const colorsStartY = startY + 40;
   const rows = Math.ceil(colors.length / COLS_PER_ROW);
   const itemHeight = SWATCH_SIZE + LABEL_HEIGHT + PADDING;
   const itemWidth = SWATCH_SIZE + PADDING;
@@ -361,7 +361,7 @@ function drawSection(ctx, title, colors, startY, geometry, isMetallic = false, t
 
     // Draw label
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 12px Arial';
+    ctx.font = 'bold 20px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
@@ -383,8 +383,8 @@ function drawSection(ctx, title, colors, startY, geometry, isMetallic = false, t
     }
     if (currentLine) lines.push(currentLine);
 
-    const lineHeight = 14;
-    const labelY = y + SWATCH_SIZE + 6;
+    const lineHeight = 24;
+    const labelY = y + SWATCH_SIZE + 10;
     lines.slice(0, 2).forEach((line, li) => {
       ctx.fillText(line, x + SWATCH_SIZE / 2, labelY + li * lineHeight);
     });
@@ -427,15 +427,15 @@ async function generateAlienSwatchImage() {
 
   // Draw header
   ctx.fillStyle = '#E8EDF5';
-  ctx.font = 'bold 26px Arial';
+  ctx.font = 'bold 36px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('Cloud Sculptor Designs', totalWidth / 2, 35);
+  ctx.fillText('Cloud Sculptor Designs', totalWidth / 2, 45);
 
-  ctx.font = '16px Arial';
+  ctx.font = '22px Arial';
   ctx.fillStyle = '#9BA8BE';
-  ctx.fillText('Available Filament Colors', totalWidth / 2, 58);
+  ctx.fillText('Available Filament Colors', totalWidth / 2, 80);
 
-  let currentY = 85;
+  let currentY = 110;
 
   // Draw sections
   console.log('Rendering Basic Colors...');
@@ -452,9 +452,9 @@ async function generateAlienSwatchImage() {
 
   // Add footer note
   ctx.fillStyle = '#6B7280';
-  ctx.font = '12px Arial';
+  ctx.font = '16px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('Note: Eyes will be black on actual prints (unless specified in order notes)', totalWidth / 2, currentY + 10);
+  ctx.fillText('Note: Eyes will be black on actual prints (unless specified in order notes)', totalWidth / 2, currentY + 15);
 
   // Save image
   const outputDir = path.join(__dirname, '..', 'public', 'images');

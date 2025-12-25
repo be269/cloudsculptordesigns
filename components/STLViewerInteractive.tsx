@@ -6,14 +6,15 @@ import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import * as THREE from "three";
 
-// Matte filament colors (Row 1 - 22 colors)
-const MATTE_COLORS = [
+// Matte filament colors (Row 1 - 23 colors)
+export const MATTE_COLORS = [
   { name: "Red", hex: "#ff0000" },
   { name: "Orange", hex: "#ff8000" },
   { name: "Yellow", hex: "#ffff00" },
   { name: "Lime", hex: "#80ff00" },
   { name: "Green", hex: "#00ff00" },
   { name: "Spring Green", hex: "#00ff80" },
+  { name: "Grass Green", hex: "#228B22" },
   { name: "Cyan", hex: "#00ffff" },
   { name: "Sky Blue", hex: "#0080ff" },
   { name: "Blue", hex: "#0000ff" },
@@ -21,8 +22,9 @@ const MATTE_COLORS = [
   { name: "Magenta", hex: "#ff00ff" },
   { name: "Hot Pink", hex: "#ff0080" },
   { name: "Light Gray", hex: "#cccccc" },
-  { name: "Gray", hex: "#808080" },
-  { name: "Dark Gray", hex: "#333333" },
+  { name: "Gray", hex: "#888888" },
+  { name: "Dark Gray", hex: "#555555" },
+  { name: "Black", hex: "#1a1a1a" },
   { name: "White", hex: "#ffffff" },
   { name: "Brown", hex: "#996633" },
   { name: "Beige", hex: "#ffcc99" },
@@ -33,7 +35,7 @@ const MATTE_COLORS = [
 ];
 
 // Metallic/Silk filament colors (Row 2 - silk versions)
-const METALLIC_COLORS = [
+export const METALLIC_COLORS = [
   { name: "Gold", hex: "#ffd700" },
   { name: "Silver", hex: "#c0c0c0" },
   { name: "Silk Red", hex: "#ff0000" },
@@ -51,7 +53,7 @@ const METALLIC_COLORS = [
 ];
 
 // Dual-color silk filaments (gradient effect)
-const DUAL_COLORS: { name: string; hex1: string; hex2: string }[] = [
+export const DUAL_COLORS: { name: string; hex1: string; hex2: string }[] = [
   { name: "Silk Red/Gold", hex1: "#ffcc00", hex2: "#ff3333" },
   { name: "Silk Green/Blue", hex1: "#00ff00", hex2: "#0000ff" },
   { name: "Silk Pink/Blue", hex1: "#ff69b4", hex2: "#00bfff" },
@@ -67,7 +69,7 @@ const DUAL_COLORS: { name: string; hex1: string; hex2: string }[] = [
 ];
 
 // Tri-color silk filaments (3-color gradient) - based on SUNLU & ERYONE products
-const TRI_COLORS: { name: string; hex1: string; hex2: string; hex3: string }[] = [
+export const TRI_COLORS: { name: string; hex1: string; hex2: string; hex3: string }[] = [
   { name: "Gold/Silver/Copper", hex1: "#ffd700", hex2: "#c0c0c0", hex3: "#b87333" },
   { name: "Red/Blue/Green", hex1: "#ff3333", hex2: "#0066ff", hex3: "#00cc00" },
   { name: "Red/Gold/Purple", hex1: "#ff3333", hex2: "#ffd700", hex3: "#9933ff" },
@@ -77,7 +79,7 @@ const TRI_COLORS: { name: string; hex1: string; hex2: string; hex3: string }[] =
 ];
 
 // Combined colors with metallic property
-const FILAMENT_COLORS = [
+export const FILAMENT_COLORS = [
   ...MATTE_COLORS.map(c => ({ ...c, metallic: false, hex: c.hex, hex2: undefined as string | undefined, hex3: undefined as string | undefined })),
   ...METALLIC_COLORS.map(c => ({ ...c, metallic: true, hex: c.hex, hex2: undefined as string | undefined, hex3: undefined as string | undefined })),
   ...DUAL_COLORS.map(c => ({ name: c.name, metallic: true, hex: c.hex1, hex2: c.hex2, hex3: undefined as string | undefined })),
@@ -85,7 +87,7 @@ const FILAMENT_COLORS = [
 ];
 
 // Size options for ordering (scale is for visual preview only)
-const SIZE_OPTIONS = [
+export const SIZE_OPTIONS = [
   { name: "Small", height: 4, scale: 0.8 },
   { name: "Medium", height: 8, scale: 1.0 },
   { name: "Large", height: 12, scale: 1.2 },
@@ -99,9 +101,11 @@ interface ModelProps {
   isRotating: boolean;
   scale: number;
   isMetallic: boolean;
+  modelRotationX?: number;
+  modelRotationY?: number;
 }
 
-function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: ModelProps) {
+function Model({ url, color, color2, color3, isRotating, scale, isMetallic, modelRotationX = 0, modelRotationY = 0 }: ModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const rawGeometry = useLoader(STLLoader, url);
@@ -114,6 +118,16 @@ function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: Mo
     // STL is typically Z-up, we need Y-up with model sitting upright
     cloned.rotateX(-Math.PI / 2);
 
+    // Apply optional X rotation (in degrees) to adjust model orientation
+    if (modelRotationX !== 0) {
+      cloned.rotateX((modelRotationX * Math.PI) / 180);
+    }
+
+    // Apply optional Y rotation (in degrees) to orient the model's face toward the viewer
+    if (modelRotationY !== 0) {
+      cloned.rotateY((modelRotationY * Math.PI) / 180);
+    }
+
     cloned.computeBoundingBox();
 
     // Get the center of the bounding box
@@ -121,18 +135,22 @@ function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: Mo
     const center = new THREE.Vector3();
     box.getCenter(center);
 
-    // Translate geometry so its center is at origin
-    cloned.translate(-center.x, -center.y, -center.z);
-    cloned.computeVertexNormals();
-
-    // Calculate scale to fit in view
+    // Calculate scale to fit in view (before centering)
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z);
 
+    // Translate geometry so its center is at origin
+    cloned.translate(-center.x, -center.y, -center.z);
+    cloned.computeVertexNormals();
+
+    // Recompute bounding box after centering for accurate Y bounds
+    cloned.computeBoundingBox();
+    const centeredBox = cloned.boundingBox!;
+
     // Get Y bounds for gradient (after centering)
-    const yMin = box.min.y - center.y;
-    const yMax = box.max.y - center.y;
+    const yMin = centeredBox.min.y;
+    const yMax = centeredBox.max.y;
 
     return {
       geometry: cloned,
@@ -140,7 +158,7 @@ function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: Mo
       yMin,
       yMax
     };
-  }, [rawGeometry]);
+  }, [rawGeometry, modelRotationX, modelRotationY]);
 
   // Colors as THREE.Color
   const colorObj = useMemo(() => new THREE.Color(color), [color]);
@@ -244,8 +262,8 @@ function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: Mo
         ) : (
           <meshStandardMaterial
             color={colorObj}
-            roughness={isMetallic ? 0.15 : 0.3}
-            metalness={isMetallic ? 0.8 : 0.1}
+            roughness={isMetallic ? 0.15 : 0.6}
+            metalness={isMetallic ? 0.8 : 0.05}
           />
         )}
       </mesh>
@@ -256,61 +274,35 @@ function Model({ url, color, color2, color3, isRotating, scale, isMetallic }: Mo
 interface STLViewerInteractiveProps {
   modelUrl: string;
   className?: string;
+  colorIndex: number;
+  sizeIndex: number;
+  onColorChange?: (index: number) => void;
+  modelRotationX?: number;
+  modelRotationY?: number;
 }
 
-export default function STLViewerInteractive({ modelUrl, className = "" }: STLViewerInteractiveProps) {
-  const [colorIndex, setColorIndex] = useState(0);
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(null);
-  const [sizeIndex, setSizeIndex] = useState(0);
+export default function STLViewerInteractive({
+  modelUrl,
+  className = "",
+  colorIndex,
+  sizeIndex,
+  onColorChange,
+  modelRotationX = 0,
+  modelRotationY = 0
+}: STLViewerInteractiveProps) {
   const [isRotating, setIsRotating] = useState(true);
-  const [isColorCycling, setIsColorCycling] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Color cycling effect
-  useEffect(() => {
-    if (!isColorCycling || selectedColorIndex !== null) return;
-
-    const interval = setInterval(() => {
-      setColorIndex((prev) => (prev + 1) % FILAMENT_COLORS.length);
-    }, 2000); // 2 seconds per color
-
-    return () => clearInterval(interval);
-  }, [isColorCycling, selectedColorIndex]);
-
-  // Handle color selection
-  const handleColorClick = useCallback((index: number) => {
-    setSelectedColorIndex(index);
-    setColorIndex(index);
-    setIsColorCycling(false);
-  }, []);
-
-  // Resume color cycling
-  const handleAllColors = useCallback(() => {
-    setSelectedColorIndex(null);
-    setIsColorCycling(true);
-  }, []);
 
   // Toggle rotation
   const toggleRotation = useCallback(() => {
     setIsRotating((prev) => !prev);
   }, []);
 
-  // Toggle color cycling
-  const toggleColorCycling = useCallback(() => {
-    if (selectedColorIndex !== null) {
-      // If a color is selected, resume cycling from current
-      setSelectedColorIndex(null);
-      setIsColorCycling(true);
-    } else {
-      setIsColorCycling((prev) => !prev);
-    }
-  }, [selectedColorIndex]);
-
   const currentColor = FILAMENT_COLORS[colorIndex];
   const currentSize = SIZE_OPTIONS[sizeIndex];
 
   return (
-    <div className={`relative ${className}`} style={{ minHeight: "500px" }}>
+    <div className={`relative ${className}`} style={{ minHeight: "100%", height: "100%" }}>
       {isLoading && (
         <div
           className="absolute inset-0 flex items-center justify-center z-10"
@@ -323,17 +315,18 @@ export default function STLViewerInteractive({ modelUrl, className = "" }: STLVi
         </div>
       )}
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas - fills entire container */}
       <Canvas
-        camera={{ position: [0, -0.5, 5], fov: 50 }}
+        camera={{ position: [0, -0.5, 4], fov: 50, near: 0.1, far: 1000 }}
         style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
         onCreated={() => setIsLoading(false)}
       >
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} />
-        <directionalLight position={[-5, -5, -5]} intensity={0.5} />
-        <directionalLight position={[0, -5, 5]} intensity={0.6} />
-        <directionalLight position={[0, 5, -5]} intensity={0.4} />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        <directionalLight position={[-5, -5, -5]} intensity={0.6} />
+        <directionalLight position={[0, -5, 5]} intensity={0.5} />
+        <directionalLight position={[0, 5, -5]} intensity={0.5} />
+        <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
         <Model
           url={modelUrl}
@@ -343,218 +336,60 @@ export default function STLViewerInteractive({ modelUrl, className = "" }: STLVi
           isRotating={isRotating}
           scale={currentSize.scale}
           isMetallic={currentColor.metallic}
+          modelRotationX={modelRotationX}
+          modelRotationY={modelRotationY}
         />
 
         <OrbitControls
           enableZoom={true}
           enablePan={false}
-          minDistance={3}
-          maxDistance={10}
-          target={[0, -0.5, 0]}
+          minDistance={2}
+          maxDistance={8}
+          target={[0, -0.3, 0]}
         />
       </Canvas>
 
-      {/* Controls overlay */}
-      <div className="absolute top-4 left-4 right-4 flex flex-wrap gap-2 justify-between items-start">
-        {/* Size selector */}
-        <div
-          className="flex gap-1 p-1 rounded-lg"
-          style={{ backgroundColor: "rgba(22, 28, 41, 0.95)", border: "1px solid #2a3649" }}
+      {/* Minimal overlay - just rotation control */}
+      <div className="absolute top-3 right-3">
+        <button
+          onClick={toggleRotation}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            isRotating
+              ? "bg-[#4A9FD4] text-white"
+              : "text-[#E8EDF5] hover:bg-[#2a3649]"
+          }`}
+          style={{
+            backgroundColor: isRotating ? "#4A9FD4" : "rgba(22, 28, 41, 0.95)",
+            border: "1px solid #4A9FD4"
+          }}
+          title={isRotating ? "Pause rotation" : "Resume rotation"}
         >
-          {SIZE_OPTIONS.map((size, idx) => (
-            <button
-              key={size.name}
-              onClick={() => setSizeIndex(idx)}
-              className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
-                sizeIndex === idx
-                  ? "bg-[#4A9FD4] text-white"
-                  : "text-[#9BA8BE] hover:bg-[#2a3649]"
-              }`}
-            >
-              {size.name} ({size.height}")
-            </button>
-          ))}
-        </div>
-
-        {/* Play/Pause controls */}
-        <div
-          className="flex gap-1 p-1 rounded-lg"
-          style={{ backgroundColor: "rgba(22, 28, 41, 0.98)", border: "1px solid #4A9FD4" }}
-        >
-          <button
-            onClick={toggleRotation}
-            className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
-              isRotating
-                ? "bg-[#4A9FD4] text-white"
-                : "text-[#E8EDF5] hover:bg-[#2a3649]"
-            }`}
-            title={isRotating ? "Pause rotation" : "Resume rotation"}
-          >
-            {isRotating ? "⏸ Spin" : "▶ Spin"}
-          </button>
-          <button
-            onClick={toggleColorCycling}
-            className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
-              isColorCycling && selectedColorIndex === null
-                ? "bg-[#4A9FD4] text-white"
-                : "text-[#E8EDF5] hover:bg-[#2a3649]"
-            }`}
-            title={isColorCycling ? "Pause color cycling" : "Resume color cycling"}
-          >
-            {isColorCycling && selectedColorIndex === null ? "⏸ Colors" : "▶ Colors"}
-          </button>
-        </div>
+          {isRotating ? "⏸" : "▶"}
+        </button>
       </div>
 
-      {/* Color palette with color name header - compact */}
+      {/* Color and size info overlay */}
       <div
-        className="absolute bottom-3 left-4 right-4 px-2 py-2 rounded-lg"
+        className="absolute bottom-3 left-3 px-3 py-2 rounded-lg flex items-center gap-2"
         style={{ backgroundColor: "rgba(22, 28, 41, 0.95)", border: "1px solid #2a3649" }}
       >
-        {/* Current color display header */}
-        <div className="flex items-center justify-between mb-2 pb-1.5" style={{ borderBottom: "1px solid #2a3649" }}>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-6 h-6 rounded-full border-2 border-white/30 shadow-lg"
-              style={{
-                background: currentColor.hex3
-                  ? `linear-gradient(135deg, ${currentColor.hex} 0%, ${currentColor.hex2} 50%, ${currentColor.hex3} 100%)`
-                  : currentColor.hex2
-                    ? `linear-gradient(135deg, ${currentColor.hex} 0%, ${currentColor.hex2} 100%)`
-                    : currentColor.hex
-              }}
-            />
-            <div>
-              <span className="text-sm font-semibold" style={{ color: "#E8EDF5" }}>
-                {currentColor.name}
-              </span>
-              <span className="text-xs ml-2" style={{ color: "#9BA8BE" }}>
-                {currentSize.height}"
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleAllColors}
-              className={`px-2 py-0.5 rounded text-xs font-medium transition-all ${
-                selectedColorIndex === null && isColorCycling
-                  ? "bg-[#4A9FD4] text-white"
-                  : "bg-[#2a3649] text-[#9BA8BE] hover:bg-[#3a4659]"
-              }`}
-            >
-              Cycle All
-            </button>
-            <span className="text-[10px] hidden sm:block" style={{ color: "#6B7280" }}>
-              Drag • Scroll
-            </span>
-          </div>
-        </div>
-        {/* Color rows with label column */}
-        <div className="flex">
-          {/* Label column with vertical border */}
-          <div
-            className="flex flex-col justify-around pr-2 mr-2"
-            style={{
-              borderRight: "1px solid #4A9FD4",
-              minWidth: "32px"
-            }}
-          >
-            <span className="text-[10px] font-medium py-1" style={{ color: "#9BA8BE" }}>Basic</span>
-            <span className="text-[10px] font-medium py-1" style={{ color: "#9BA8BE" }}>Silk</span>
-            <span className="text-[10px] font-medium py-1" style={{ color: "#9BA8BE" }}>Dual</span>
-            <span className="text-[10px] font-medium py-1" style={{ color: "#9BA8BE" }}>Tri</span>
-          </div>
-
-          {/* Color swatches column */}
-          <div className="flex-1">
-            {/* Basic colors row */}
-            <div className="flex flex-wrap items-center gap-1 py-0.5">
-              {FILAMENT_COLORS.slice(0, MATTE_COLORS.length).map((color, idx) => (
-                <button
-                  key={color.name}
-                  onClick={() => handleColorClick(idx)}
-                  className={`w-5 h-5 rounded-full border-2 transition-all hover:scale-110 ${
-                    colorIndex === idx
-                      ? "border-white shadow-lg scale-110"
-                      : "border-transparent hover:border-white/50"
-                  }`}
-                  style={{ backgroundColor: color.hex }}
-                  title={color.name}
-                />
-              ))}
-            </div>
-            {/* Separator line */}
-            <div className="h-px" style={{ background: "linear-gradient(90deg, #4A9FD4 0%, #4A9FD4 80%, transparent 100%)", opacity: 0.25 }} />
-            {/* Metallic/Silk colors row */}
-            <div className="flex flex-wrap items-center gap-1 py-0.5">
-              {FILAMENT_COLORS.slice(MATTE_COLORS.length, MATTE_COLORS.length + METALLIC_COLORS.length).map((color, idx) => (
-                <button
-                  key={color.name}
-                  onClick={() => handleColorClick(idx + MATTE_COLORS.length)}
-                  className={`w-5 h-5 rounded-full border-2 transition-all hover:scale-110 ${
-                    colorIndex === idx + MATTE_COLORS.length
-                      ? "border-white shadow-lg scale-110"
-                      : "border-transparent hover:border-white/50"
-                  }`}
-                  style={{
-                    backgroundColor: color.hex,
-                    background: `linear-gradient(135deg, ${color.hex} 0%, ${color.hex}dd 50%, ${color.hex} 100%)`,
-                    boxShadow: "inset 0 0 3px rgba(255,255,255,0.5)"
-                  }}
-                  title={color.name}
-                />
-              ))}
-            </div>
-            {/* Separator line */}
-            <div className="h-px" style={{ background: "linear-gradient(90deg, #4A9FD4 0%, #4A9FD4 80%, transparent 100%)", opacity: 0.25 }} />
-            {/* Dual-color silk row */}
-            <div className="flex flex-wrap items-center gap-1 py-0.5">
-              {FILAMENT_COLORS.slice(MATTE_COLORS.length + METALLIC_COLORS.length, MATTE_COLORS.length + METALLIC_COLORS.length + DUAL_COLORS.length).map((color, idx) => {
-                const actualIdx = idx + MATTE_COLORS.length + METALLIC_COLORS.length;
-                return (
-                  <button
-                    key={color.name}
-                    onClick={() => handleColorClick(actualIdx)}
-                    className={`w-5 h-5 rounded-full border-2 transition-all hover:scale-110 ${
-                      colorIndex === actualIdx
-                        ? "border-white shadow-lg scale-110"
-                        : "border-transparent hover:border-white/50"
-                    }`}
-                    style={{
-                      background: `linear-gradient(135deg, ${color.hex} 0%, ${color.hex2} 100%)`,
-                      boxShadow: "inset 0 0 3px rgba(255,255,255,0.5)"
-                    }}
-                    title={color.name}
-                  />
-                );
-              })}
-            </div>
-            {/* Separator line */}
-            <div className="h-px" style={{ background: "linear-gradient(90deg, #4A9FD4 0%, #4A9FD4 80%, transparent 100%)", opacity: 0.25 }} />
-            {/* Tri-color silk row */}
-            <div className="flex flex-wrap items-center gap-1 py-0.5">
-              {FILAMENT_COLORS.slice(MATTE_COLORS.length + METALLIC_COLORS.length + DUAL_COLORS.length).map((color, idx) => {
-                const actualIdx = idx + MATTE_COLORS.length + METALLIC_COLORS.length + DUAL_COLORS.length;
-                return (
-                  <button
-                    key={color.name}
-                    onClick={() => handleColorClick(actualIdx)}
-                    className={`w-5 h-5 rounded-full border-2 transition-all hover:scale-110 ${
-                      colorIndex === actualIdx
-                        ? "border-white shadow-lg scale-110"
-                        : "border-transparent hover:border-white/50"
-                    }`}
-                    style={{
-                      background: `linear-gradient(135deg, ${color.hex} 0%, ${color.hex2} 50%, ${color.hex3} 100%)`,
-                      boxShadow: "inset 0 0 3px rgba(255,255,255,0.5)"
-                    }}
-                    title={color.name}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        <div
+          className="w-5 h-5 rounded-full border-2 border-white/30"
+          style={{
+            background: currentColor.hex3
+              ? `linear-gradient(135deg, ${currentColor.hex} 0%, ${currentColor.hex2} 50%, ${currentColor.hex3} 100%)`
+              : currentColor.hex2
+                ? `linear-gradient(135deg, ${currentColor.hex} 0%, ${currentColor.hex2} 100%)`
+                : currentColor.hex
+          }}
+        />
+        <span className="text-sm" style={{ color: "#E8EDF5" }}>
+          {currentColor.name}
+        </span>
+        <span className="text-xs" style={{ color: "#6B7280" }}>•</span>
+        <span className="text-xs" style={{ color: "#9BA8BE" }}>
+          Drag to rotate • Scroll to zoom
+        </span>
       </div>
     </div>
   );
