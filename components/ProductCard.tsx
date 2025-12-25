@@ -35,9 +35,15 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden animate-fade-in">
+    <div
+      className="group rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden animate-fade-in"
+      style={{
+        backgroundColor: '#1e2739',
+        border: '1px solid #2a3649',
+      }}
+    >
       <Link href={`/products/${product.slug}`}>
-        <div className="relative h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+        <div className="relative h-64 overflow-hidden" style={{ backgroundColor: '#2a3649' }}>
           <Image
             src={product.image}
             alt={product.title}
@@ -47,34 +53,33 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="p-4">
-          <div className="text-sm text-primary-600 dark:text-primary-400 font-semibold mb-1">
+          <div className="text-sm font-semibold mb-1" style={{ color: '#4A9FD4' }}>
             {product.category}
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+          <h3
+            className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-[#4A9FD4] transition-colors"
+            style={{ color: '#E8EDF5' }}
+          >
             {product.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2">
+          <p className="text-sm mb-3 line-clamp-2" style={{ color: '#9BA8BE' }}>
             {product.description}
           </p>
 
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">
+            <span className="text-2xl font-bold" style={{ color: '#E8EDF5' }}>
               ${product.price.toFixed(2)}
             </span>
             <button
               onClick={handleAddToCart}
-              className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-lg transition-colors duration-200"
+              className="text-white p-2 rounded-lg transition-colors duration-200 hover:opacity-90"
+              style={{ backgroundColor: '#4A9FD4' }}
               title="Add to cart"
             >
               <ShoppingCart className="w-5 h-5" />
             </button>
           </div>
 
-          {product.stock < 100 && (
-            <div className="mt-2 text-xs text-orange-600 dark:text-orange-400">
-              Only {product.stock} left in stock!
-            </div>
-          )}
         </div>
       </Link>
     </div>

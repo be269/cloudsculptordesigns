@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "cloud-sculptor-designs"
-  }
+  },
+  "targets": {
+    "cloud-sculptor-designs": {
+      "hosting": {
+        "production": [
+          "cloud-sculptor-designs"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

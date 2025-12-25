@@ -9,17 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Blues from logo - light cyan to deep navy
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#E8F7FC',
+          100: '#C5EBF7',
+          200: '#8DD8F0',
+          300: '#5BCEFA',
+          400: '#3BB5E8',
+          500: '#2A9DD6',
+          600: '#1E7BB8',
+          700: '#1A5F94',
+          800: '#1E4A8D',
+          900: '#162B5E',
+        },
+        // Dark grays for backgrounds (matching logo gradient)
+        dark: {
+          50: '#9CA3AF',
+          100: '#6B7280',
+          200: '#4B5563',
+          300: '#3F4654',
+          400: '#343A46',
+          500: '#2A2F3A',
+          600: '#22262F',
+          700: '#1A1D24',
+          800: '#14161B',
+          900: '#0D0E12',
         },
       },
       animation: {
