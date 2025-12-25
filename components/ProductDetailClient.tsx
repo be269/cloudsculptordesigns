@@ -3,8 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart, ArrowLeft, Check, Palette, Play } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ShoppingCart, ArrowLeft, Check, Palette, Play, Box } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+
+// Dynamically import STLViewerInteractive to avoid SSR issues with Three.js
+const STLViewerInteractive = dynamic(
+  () => import("@/components/STLViewerInteractive"),
+  { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
+);
 
 interface Product {
   id: string;
@@ -26,6 +33,7 @@ interface Product {
   hasColorOptions?: boolean;
   colorPreviewGif?: string;
   colorPreviewVideo?: string;  // WebM/MP4 video path (without extension)
+  modelUrl?: string;  // Path to STL file for interactive 3D viewer
 }
 
 // Size options with pricing multipliers
@@ -74,6 +82,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const [selectedSize, setSelectedSize] = useState(SIZE_OPTIONS[0]);
   const [selectedColor, setSelectedColor] = useState(FILAMENT_COLORS[0]);
   const hasColorPreview = product.colorPreviewVideo || product.colorPreviewGif;
+  const has3DViewer = !!product.modelUrl;
+  // Default to 3D viewer if available, otherwise color preview, otherwise photos
+  const [viewMode, setViewMode] = useState<'3d' | 'colorPreview' | 'photos'>(
+    has3DViewer ? '3d' : hasColorPreview ? 'colorPreview' : 'photos'
+  );
   const [showColorPreview, setShowColorPreview] = useState(hasColorPreview ? true : false);
   const [colorManuallySelected, setColorManuallySelected] = useState(false);
 
@@ -119,32 +132,50 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Images / 3D Viewer */}
           <div className="rounded-lg shadow-lg p-8" style={{ backgroundColor: '#1e2739', border: '1px solid #2a3649' }}>
-            {/* View Toggle (if color preview available) */}
-            {hasColorPreview && (
-              <div className="flex gap-2 mb-4">
+            {/* View Toggle (if 3D viewer or color preview available) */}
+            {(has3DViewer || hasColorPreview) && (
+              <div className="flex gap-2 mb-4 flex-wrap">
+                {has3DViewer && (
+                  <button
+                    onClick={() => setViewMode('3d')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                      viewMode === '3d' ? 'ring-2 ring-[#4A9FD4]' : 'hover:bg-[#2a3649]'
+                    }`}
+                    style={{
+                      backgroundColor: viewMode === '3d' ? 'rgba(74, 159, 212, 0.2)' : 'transparent',
+                      border: '1px solid #2a3649',
+                      color: viewMode === '3d' ? '#4A9FD4' : '#9BA8BE',
+                    }}
+                  >
+                    <Box className="w-4 h-4" />
+                    3D Viewer
+                  </button>
+                )}
+                {hasColorPreview && (
+                  <button
+                    onClick={() => setViewMode('colorPreview')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                      viewMode === 'colorPreview' ? 'ring-2 ring-[#4A9FD4]' : 'hover:bg-[#2a3649]'
+                    }`}
+                    style={{
+                      backgroundColor: viewMode === 'colorPreview' ? 'rgba(74, 159, 212, 0.2)' : 'transparent',
+                      border: '1px solid #2a3649',
+                      color: viewMode === 'colorPreview' ? '#4A9FD4' : '#9BA8BE',
+                    }}
+                  >
+                    <Palette className="w-4 h-4" />
+                    Color Preview
+                  </button>
+                )}
                 <button
-                  onClick={() => setShowColorPreview(true)}
+                  onClick={() => setViewMode('photos')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    showColorPreview ? 'ring-2 ring-[#4A9FD4]' : 'hover:bg-[#2a3649]'
+                    viewMode === 'photos' ? 'ring-2 ring-[#4A9FD4]' : 'hover:bg-[#2a3649]'
                   }`}
                   style={{
-                    backgroundColor: showColorPreview ? 'rgba(74, 159, 212, 0.2)' : 'transparent',
+                    backgroundColor: viewMode === 'photos' ? 'rgba(74, 159, 212, 0.2)' : 'transparent',
                     border: '1px solid #2a3649',
-                    color: showColorPreview ? '#4A9FD4' : '#9BA8BE',
-                  }}
-                >
-                  <Palette className="w-4 h-4" />
-                  Color Preview
-                </button>
-                <button
-                  onClick={() => setShowColorPreview(false)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    !showColorPreview ? 'ring-2 ring-[#4A9FD4]' : 'hover:bg-[#2a3649]'
-                  }`}
-                  style={{
-                    backgroundColor: !showColorPreview ? 'rgba(74, 159, 212, 0.2)' : 'transparent',
-                    border: '1px solid #2a3649',
-                    color: !showColorPreview ? '#4A9FD4' : '#9BA8BE',
+                    color: viewMode === 'photos' ? '#4A9FD4' : '#9BA8BE',
                   }}
                 >
                   Photos
@@ -152,8 +183,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               </div>
             )}
 
-            {/* Color Preview Video/GIF or Static Image */}
-            {showColorPreview && hasColorPreview ? (
+            {/* 3D Interactive Viewer */}
+            {viewMode === '3d' && has3DViewer ? (
+              <div className="aspect-square rounded-lg overflow-hidden" style={{ backgroundColor: '#161c29' }}>
+                <STLViewerInteractive
+                  modelUrl={product.modelUrl!}
+                  className="w-full h-full"
+                />
+              </div>
+            ) : viewMode === 'colorPreview' && hasColorPreview ? (
+              /* Color Preview Video/GIF or Static Image */
               <div className="aspect-square rounded-lg overflow-hidden relative" style={{ backgroundColor: '#161c29' }}>
                 {colorManuallySelected ? (
                   <>
