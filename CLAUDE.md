@@ -41,10 +41,14 @@ All products designed by pipecox have `/images/products/pipecox-authorized-selle
 - Futuristic Cityscape Head Planter
 - Forest Goddess Planter
 
-## Deployment Commands
+## Deployment
+- **Hosting**: Firebase Hosting (NOT Netlify)
+- **Workflow**: Push to GitHub, then build and deploy to Firebase
+- **Commands**:
 ```bash
-cd ~/cloudsculptordesigns && npm run build && npx firebase deploy --only hosting
+cd ~/cloudsculptordesigns-dev && npm run build && npx firebase deploy --only hosting
 ```
+- Must be logged in via `firebase login` before deploying
 
 ## Key Files
 - `data/products.json` - Product catalog
