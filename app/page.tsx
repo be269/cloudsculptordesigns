@@ -41,14 +41,14 @@ export default function Home() {
       <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4" style={{ color: '#E8EDF5' }}>
-            Featured Collections
+            Discover the Extraordinary
           </h2>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: '#9BA8BE' }}>
-            Explore our unique 3D printed designs - from anatomical art to mythical creatures
+            Mind-bending brain lamps, fire-breathing dragons, and otherworldly aliens await. Each piece is crafted layer-by-layer to spark wonder and ignite conversations!
           </p>
         </div>
 
-        <ProductGrid limit={8} />
+        <ProductGrid />
 
         <div className="text-center mt-12">
           <Link

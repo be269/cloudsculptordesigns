@@ -213,7 +213,7 @@ export default function GLBViewerInteractive({ modelUrl, className = "" }: GLBVi
           url={modelUrl}
           color={currentColor.hex}
           isRotating={isRotating}
-          scale={currentSize.scale}
+          scale={1.0}
           onLoaded={() => setIsLoading(false)}
         />
 

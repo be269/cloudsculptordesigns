@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
@@ -22,6 +23,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCartStore();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setIsAdmin(params.get('admin') === 'true');
+  }, []);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         border: '1px solid #2a3649',
       }}
     >
-      <Link href={`/products/${product.slug}`}>
+      <Link href={`/products/${product.slug}${isAdmin ? '?admin=true' : ''}`}>
         <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden" style={{ backgroundColor: '#2a3649' }}>
           <Image
             src={product.image}

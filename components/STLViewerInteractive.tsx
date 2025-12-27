@@ -37,7 +37,7 @@ export const MATTE_COLORS = [
 // Metallic/Silk filament colors (Row 2 - silk versions)
 export const METALLIC_COLORS = [
   { name: "Gold", hex: "#ffd700" },
-  { name: "Silver", hex: "#c0c0c0" },
+  { name: "Silver", hex: "#e8e8e8" },
   { name: "Silk Red", hex: "#ff0000" },
   { name: "Silk Orange", hex: "#ff8000" },
   { name: "Silk Yellow", hex: "#ffff00" },
@@ -57,7 +57,7 @@ export const DUAL_COLORS: { name: string; hex1: string; hex2: string }[] = [
   { name: "Silk Red/Gold", hex1: "#ffcc00", hex2: "#ff3333" },
   { name: "Silk Green/Blue", hex1: "#00ff00", hex2: "#0000ff" },
   { name: "Silk Pink/Blue", hex1: "#ff69b4", hex2: "#00bfff" },
-  { name: "Silk Gold/Silver", hex1: "#ffd700", hex2: "#c0c0c0" },
+  { name: "Silk Gold/Silver", hex1: "#ffd700", hex2: "#e8e8e8" },
   { name: "Silk Copper/Gold", hex1: "#b87333", hex2: "#ffd700" },
   { name: "Silk Black/Gold", hex1: "#1a1a1a", hex2: "#ffd700" },
   { name: "Silk Black/Blue", hex1: "#1a1a1a", hex2: "#0066ff" },
@@ -70,7 +70,7 @@ export const DUAL_COLORS: { name: string; hex1: string; hex2: string }[] = [
 
 // Tri-color silk filaments (3-color gradient) - based on SUNLU & ERYONE products
 export const TRI_COLORS: { name: string; hex1: string; hex2: string; hex3: string }[] = [
-  { name: "Gold/Silver/Copper", hex1: "#ffd700", hex2: "#c0c0c0", hex3: "#b87333" },
+  { name: "Gold/Silver/Copper", hex1: "#ffd700", hex2: "#e8e8e8", hex3: "#b87333" },
   { name: "Red/Blue/Green", hex1: "#ff3333", hex2: "#0066ff", hex3: "#00cc00" },
   { name: "Red/Gold/Purple", hex1: "#ff3333", hex2: "#ffd700", hex3: "#9933ff" },
   { name: "Orange/Blue/Green", hex1: "#ff6600", hex2: "#0066ff", hex3: "#00cc00" },
@@ -317,7 +317,7 @@ export default function STLViewerInteractive({
 
       {/* 3D Canvas - fills entire container */}
       <Canvas
-        camera={{ position: [0, -0.5, 4], fov: 50, near: 0.1, far: 1000 }}
+        camera={{ position: [0, -0.3, 2.5], fov: 50, near: 0.1, far: 1000 }}
         style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
         onCreated={() => setIsLoading(false)}
       >
@@ -334,7 +334,7 @@ export default function STLViewerInteractive({
           color2={currentColor.hex2}
           color3={currentColor.hex3}
           isRotating={isRotating}
-          scale={currentSize.scale}
+          scale={1.0}
           isMetallic={currentColor.metallic}
           modelRotationX={modelRotationX}
           modelRotationY={modelRotationY}

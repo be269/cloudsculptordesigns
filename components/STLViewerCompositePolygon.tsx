@@ -165,27 +165,27 @@ function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], r
   );
 }
 
-interface CompositeLampSceneProps {
+interface CompositePolygonSceneProps {
   baseUrl: string;
-  lampUrl: string;
-  lampColor: string;
-  lampColor2?: string;
-  lampColor3?: string;
+  vaseUrl: string;
+  vaseColor: string;
+  vaseColor2?: string;
+  vaseColor3?: string;
   isRotating: boolean;
   scale: number;
   isMetallic: boolean;
 }
 
-function CompositeLampScene({
+function CompositePolygonScene({
   baseUrl,
-  lampUrl,
-  lampColor,
-  lampColor2,
-  lampColor3,
+  vaseUrl,
+  vaseColor,
+  vaseColor2,
+  vaseColor3,
   isRotating,
   scale,
   isMetallic
-}: CompositeLampSceneProps) {
+}: CompositePolygonSceneProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Rotate the group for smooth centered rotation
@@ -197,41 +197,41 @@ function CompositeLampScene({
 
   return (
     <group ref={groupRef} scale={[scale, scale, scale]}>
-      {/* Base - at bottom, same color as lamp */}
+      {/* Base/Tray - at bottom, same color as vase */}
       <Model
         url={baseUrl}
-        color={lampColor}
-        color2={lampColor2}
-        color3={lampColor3}
+        color={vaseColor}
+        color2={vaseColor2}
+        color3={vaseColor3}
         isMetallic={isMetallic}
-        position={[0, -0.5, 0]}
+        position={[0, -0.6, 0]}
       />
-      {/* Magic Lamp - on top, centered over the base square */}
+      {/* Polygon Vase - on top of base */}
       <Model
-        url={lampUrl}
-        color={lampColor}
-        color2={lampColor2}
-        color3={lampColor3}
+        url={vaseUrl}
+        color={vaseColor}
+        color2={vaseColor2}
+        color3={vaseColor3}
         isMetallic={isMetallic}
-        position={[0, 0.5, 0]}
+        position={[0, 0.3, 0]}
       />
     </group>
   );
 }
 
-interface STLViewerCompositeLampProps {
+interface STLViewerCompositePolygonProps {
   className?: string;
   colorIndex: number;
   sizeIndex: number;
   onColorChange?: (index: number) => void;
 }
 
-export default function STLViewerCompositeLamp({
+export default function STLViewerCompositePolygon({
   className = "",
   colorIndex,
   sizeIndex,
   onColorChange
-}: STLViewerCompositeLampProps) {
+}: STLViewerCompositePolygonProps) {
   const [isRotating, setIsRotating] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -268,12 +268,12 @@ export default function STLViewerCompositeLamp({
         <directionalLight position={[0, 5, -5]} intensity={0.5} />
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
-        <CompositeLampScene
-          baseUrl="/models/magic_lamp_base.stl"
-          lampUrl="/models/magic_lamp.stl"
-          lampColor={currentColor.hex}
-          lampColor2={currentColor.hex2}
-          lampColor3={currentColor.hex3}
+        <CompositePolygonScene
+          baseUrl="/models/polygon_vase_base.stl"
+          vaseUrl="/models/polygon_vase.stl"
+          vaseColor={currentColor.hex}
+          vaseColor2={currentColor.hex2}
+          vaseColor3={currentColor.hex3}
           isRotating={isRotating}
           scale={1.0}
           isMetallic={currentColor.metallic}

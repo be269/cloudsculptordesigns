@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Sculptor - Photo Manager</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #161c29;
+      color: #E8EDF5;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 { color: #4A9FD4; margin-bottom: 5px; }
+    .subtitle { color: #9BA8BE; margin-bottom: 30px; }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 1px solid #2a3649;
+      border-radius: 8px;
+      background: #1e2739;
+      color: #E8EDF5;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: #4A9FD4;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .product-card {
+      background: #1e2739;
+      border: 1px solid #2a3649;
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .product-card:hover {
+      border-color: #4A9FD4;
+      transform: translateY(-2px);
+    }
+    .product-card.selected {
+      border-color: #4A9FD4;
+      background: rgba(74, 159, 212, 0.1);
+    }
+    .product-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #161c29;
+    }
+    .product-card h3 {
+      margin: 0 0 5px 0;
+      font-size: 14px;
+      color: #E8EDF5;
+    }
+    .product-card .slug {
+      font-size: 11px;
+      color: #9BA8BE;
+    }
+    .product-card .image-count {
+      font-size: 11px;
+      color: #4A9FD4;
+      margin-top: 5px;
+    }
+
+    .upload-section {
+      background: #1e2739;
+      border: 2px dashed #2a3649;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+    }
+    .upload-section.dragover {
+      border-color: #4A9FD4;
+      background: rgba(74, 159, 212, 0.1);
+    }
+    .upload-section.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .upload-section h2 {
+      margin: 0 0 10px 0;
+      color: #4A9FD4;
+    }
+    .upload-section p {
+      color: #9BA8BE;
+      margin: 0 0 20px 0;
+    }
+    .upload-section input[type="file"] {
+      display: none;
+    }
+    .upload-btn {
+      background: #4A9FD4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .upload-btn:hover {
+      background: #3a8fc4;
+    }
+
+    .preview-section {
+      display: none;
+      margin-bottom: 20px;
+    }
+    .preview-section.active {
+      display: block;
+    }
+    .preview-section h3 {
+      color: #4A9FD4;
+      margin-bottom: 15px;
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .preview-item {
+      position: relative;
+      background: #1e2739;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .preview-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255,0,0,0.8);
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .preview-item .set-main {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      background: rgba(74, 159, 212, 0.9);
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .preview-item.is-main {
+      border: 2px solid #4A9FD4;
+    }
+    .preview-item.is-main::after {
+      content: 'MAIN';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: #4A9FD4;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .actions button {
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .actions .save-btn {
+      background: #22c55e;
+      color: white;
+      border: none;
+    }
+    .actions .save-btn:hover {
+      background: #16a34a;
+    }
+    .actions .save-btn:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+    .actions .clear-btn {
+      background: transparent;
+      color: #9BA8BE;
+      border: 1px solid #2a3649;
+    }
+    .actions .clear-btn:hover {
+      border-color: #9BA8BE;
+    }
+
+    .status {
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+    .status.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    .status.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .instructions {
+      background: #1e2739;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    .instructions h3 {
+      color: #4A9FD4;
+      margin-top: 0;
+    }
+    .instructions code {
+      background: #161c29;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .instructions ol {
+      color: #9BA8BE;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cloud Sculptor Photo Manager</h1>
+    <p class="subtitle">Quickly add photos to product listings</p>
+
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search products by name..." autofocus>
+    </div>
+
+    <div class="product-list" id="productList"></div>
+
+    <div class="upload-section disabled" id="uploadSection">
+      <h2 id="selectedProductName">Select a product first</h2>
+      <p>Drag and drop photos here, or click to browse</p>
+      <label class="upload-btn">
+        Choose Photos
+        <input type="file" id="fileInput" multiple accept="image/*">
+      </label>
+    </div>
+
+    <div class="preview-section" id="previewSection">
+      <h3>Photos to Add (<span id="photoCount">0</span>)</h3>
+      <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <div class="actions">
+      <button class="clear-btn" onclick="clearSelection()">Clear</button>
+      <button class="save-btn" id="saveBtn" disabled onclick="savePhotos()">Save Photos</button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="instructions">
+      <h3>How to Use</h3>
+      <ol>
+        <li>Search for a product by name</li>
+        <li>Click on the product card to select it</li>
+        <li>Drag & drop photos or click "Choose Photos"</li>
+        <li>Click "Set as Main" on any photo to make it the primary image</li>
+        <li>Click "Save Photos" - this copies the command to your clipboard</li>
+        <li>Paste and run the command in your terminal</li>
+      </ol>
+      <p style="color: #9BA8BE; margin-top: 15px;">
+        <strong>Note:</strong> This GUI generates a terminal command because browsers can't directly
+        write to your filesystem. The command will copy your photos and update products.json.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    let products = [];
+    let selectedProduct = null;
+    let selectedFiles = [];
+    let mainImageIndex = -1;
+
+    // Load products from products.json (you'll need to serve this)
+    async function loadProducts() {
+      try {
+        const resp = await fetch('/data/products.json');
+        products = await resp.json();
+        renderProducts(products);
+      } catch (e) {
+        // Fallback: load from localStorage or show instructions
+        document.getElementById('productList').innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #9BA8BE;">
+            <p>To use this GUI, start the dev server:</p>
+            <code style="display: block; margin: 20px 0; padding: 15px; background: #161c29; border-radius: 8px;">
+              cd ~/cloudsculptordesigns-dev && npm run dev
+            </code>
+            <p>Then open: <a href="http://localhost:3000/photo-manager.html" style="color: #4A9FD4;">http://localhost:3000/photo-manager.html</a></p>
+          </div>
+        `;
+      }
+    }
+
+    function renderProducts(list) {
+      const html = list.map(p => `
+        <div class="product-card ${selectedProduct?.slug === p.slug ? 'selected' : ''}"
+             onclick="selectProduct('${p.slug}')">
+          <img src="${p.image}" alt="${p.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23161c29%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%234A9FD4%22 font-size=%2212%22>No Image</text></svg>'">
+          <h3>${p.title}</h3>
+          <div class="slug">${p.slug}</div>
+          <div class="image-count">${(p.additionalImages?.length || 0) + 1} photos</div>
+        </div>
+      `).join('');
+      document.getElementById('productList').innerHTML = html;
+    }
+
+    function selectProduct(slug) {
+      selectedProduct = products.find(p => p.slug === slug);
+      renderProducts(products.filter(p =>
+        document.getElementById('search').value === '' ||
+        p.title.toLowerCase().includes(document.getElementById('search').value.toLowerCase()) ||
+        p.slug.includes(document.getElementById('search').value.toLowerCase())
+      ));
+
+      const uploadSection = document.getElementById('uploadSection');
+      uploadSection.classList.remove('disabled');
+      document.getElementById('selectedProductName').textContent = selectedProduct.title;
+      updateSaveButton();
+    }
+
+    document.getElementById('search').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = products.filter(p =>
+        p.title.toLowerCase().includes(term) ||
+        p.slug.includes(term)
+      );
+      renderProducts(filtered);
+    });
+
+    // File handling
+    const uploadSection = document.getElementById('uploadSection');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      if (selectedProduct) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          selectedFiles.push(file);
+        }
+      }
+      renderPreviews();
+      updateSaveButton();
+    }
+
+    function renderPreviews() {
+      const previewSection = document.getElementById('previewSection');
+      const previewGrid = document.getElementById('previewGrid');
+
+      if (selectedFiles.length === 0) {
+        previewSection.classList.remove('active');
+        return;
+      }
+
+      previewSection.classList.add('active');
+      document.getElementById('photoCount').textContent = selectedFiles.length;
+
+      previewGrid.innerHTML = selectedFiles.map((file, i) => `
+        <div class="preview-item ${i === mainImageIndex ? 'is-main' : ''}">
+          <img src="${URL.createObjectURL(file)}" alt="Preview">
+          <button class="remove-btn" onclick="removeFile(${i})">×</button>
+          ${i !== mainImageIndex ? `<button class="set-main" onclick="setMain(${i})">Set as Main</button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      if (mainImageIndex === index) mainImageIndex = -1;
+      else if (mainImageIndex > index) mainImageIndex--;
+      renderPreviews();
+      updateSaveButton();
+    }
+
+    function setMain(index) {
+      mainImageIndex = index;
+      renderPreviews();
+    }
+
+    function clearSelection() {
+      selectedFiles = [];
+      mainImageIndex = -1;
+      fileInput.value = '';
+      renderPreviews();
+      updateSaveButton();
+    }
+
+    function updateSaveButton() {
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = !selectedProduct || selectedFiles.length === 0;
+    }
+
+    function savePhotos() {
+      if (!selectedProduct || selectedFiles.length === 0) return;
+
+      // Generate the command
+      const filePaths = selectedFiles.map(f => f.name).join('" "');
+      const mainFlag = mainImageIndex >= 0 ? '--main ' : '';
+
+      // Reorder files if main is set
+      let orderedFiles = [...selectedFiles];
+      if (mainImageIndex >= 0) {
+        const mainFile = orderedFiles.splice(mainImageIndex, 1)[0];
+        orderedFiles.unshift(mainFile);
+      }
+
+      const fileList = orderedFiles.map(f => `"${f.name}"`).join(' ');
+      const command = `cd ~/cloudsculptordesigns-dev && node scripts/add-photos.js ${mainFlag}"${selectedProduct.slug}" ${fileList}`;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(command).then(() => {
+        showStatus('success', `Command copied to clipboard! Paste it in your terminal to add ${selectedFiles.length} photo(s) to "${selectedProduct.title}"`);
+      }).catch(() => {
+        showStatus('error', 'Could not copy to clipboard. Here is the command:');
+        alert(command);
+      });
+    }
+
+    function showStatus(type, message) {
+      const status = document.getElementById('status');
+      status.className = 'status ' + type;
+      status.textContent = message;
+      setTimeout(() => {
+        status.className = 'status';
+      }, 5000);
+    }
+
+    // Init
+    loadProducts();
+  </script>
+</body>
+</html>

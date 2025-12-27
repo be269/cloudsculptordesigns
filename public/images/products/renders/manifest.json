@@ -1,0 +1,66 @@
+[
+  {
+    "model": "celtic_skull.stl",
+    "render": "/images/products/renders/celtic_skull_render.jpg"
+  },
+  {
+    "model": "oni_wall_mask.stl",
+    "render": "/images/products/renders/oni_wall_mask_render.jpg"
+  },
+  {
+    "model": "robot_hand.stl",
+    "render": "/images/products/renders/robot_hand_render.jpg"
+  },
+  {
+    "model": "retro_rocket.stl",
+    "render": "/images/products/renders/retro_rocket_render.jpg"
+  },
+  {
+    "model": "forest_goddess.stl",
+    "render": "/images/products/renders/forest_goddess_render.jpg"
+  },
+  {
+    "model": "rocket_with_plume.stl",
+    "render": "/images/products/renders/rocket_with_plume_render.jpg"
+  },
+  {
+    "model": "castle.stl",
+    "render": "/images/products/renders/castle_render.jpg"
+  },
+  {
+    "model": "foo_lion.stl",
+    "render": "/images/products/renders/foo_lion_render.jpg"
+  },
+  {
+    "model": "brain.stl",
+    "render": "/images/products/renders/brain_render.jpg"
+  },
+  {
+    "model": "chinese_dragon.stl",
+    "render": "/images/products/renders/chinese_dragon_render.jpg"
+  },
+  {
+    "model": "Alien_4.stl",
+    "render": "/images/products/renders/Alien_4_render.jpg"
+  },
+  {
+    "model": "dragon_egg.stl",
+    "render": "/images/products/renders/dragon_egg_render.jpg"
+  },
+  {
+    "model": "Alien_3.stl",
+    "render": "/images/products/renders/Alien_3_render.jpg"
+  },
+  {
+    "model": "Alien_2.stl",
+    "render": "/images/products/renders/Alien_2_render.jpg"
+  },
+  {
+    "model": "magic_lamp.stl",
+    "render": "/images/products/renders/magic_lamp_render.jpg"
+  },
+  {
+    "model": "Alien_1.stl",
+    "render": "/images/products/renders/Alien_1_render.jpg"
+  }
+]

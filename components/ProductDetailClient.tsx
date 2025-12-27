@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { ShoppingCart, ArrowLeft, Check, Palette, Box } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Check, Palette, Box, Plus, Upload, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
 // Import color constants from STLViewerInteractive
@@ -46,8 +46,15 @@ const STLViewerCompositeAlien2 = dynamic(
   { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
 );
 
+// Dynamically import composite polygon viewer for futuristic cityscape planter
+const STLViewerCompositePolygon = dynamic(
+  () => import("@/components/STLViewerCompositePolygon"),
+  { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
+);
+
 interface Product {
   id: string;
+  slug: string;
   title: string;
   price: number;
   category: string;
@@ -72,33 +79,65 @@ interface Product {
   useCompositeLampViewer?: boolean;
   useCompositeGoddessViewer?: boolean;
   useCompositeAlien2Viewer?: boolean;
+  useCompositePolygonViewer?: boolean;
   modelRotationX?: number;
   modelRotationY?: number;
   hideColorOptions?: boolean;
+  hideSizeOptions?: boolean;
+  dimensionsBySize?: {
+    small: string;
+    medium: string;
+    large: string;
+  };
 }
 
-// Size options with pricing multipliers
+// Size options with pricing multipliers and physical size scales
 const SIZE_OPTIONS = [
-  { name: "Small", multiplier: 1, label: "Small (Standard)" },
-  { name: "Medium", multiplier: 2, label: "Medium (1.5× size)" },
-  { name: "Large", multiplier: 4, label: "Large (2× size)" },
+  { name: "Small", multiplier: 1, sizeScale: 1, label: "Small (Standard)" },
+  { name: "Medium", multiplier: 2, sizeScale: 1.5, label: "Medium (1.5× size)" },
+  { name: "Large", multiplier: 4, sizeScale: 2, label: "Large (2× size)" },
 ];
+
+// Scale dimensions string based on size multiplier
+function scaleDimensions(dimensions: string, scale: number): string {
+  if (scale === 1) return dimensions;
+
+  // Match patterns like "5 inches", "4.5\"", "6\" x 5\"", "5 inches tall"
+  return dimensions.replace(/(\d+\.?\d*)\s*(inches?|"|''|in\.?)/gi, (match, num, unit) => {
+    const scaled = (parseFloat(num) * scale).toFixed(1).replace(/\.0$/, '');
+    return `${scaled}${unit}`;
+  });
+}
 
 interface ProductDetailClientProps {
   product: Product;
 }
 
-export default function ProductDetailClient({ product }: ProductDetailClientProps) {
+export default function ProductDetailClient({ product: initialProduct }: ProductDetailClientProps) {
   const { addItem } = useCartStore();
+  const [product, setProduct] = useState(initialProduct);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
-  const [selectedColorIndex, setSelectedColorIndex] = useState(product.defaultColorIndex ?? 0);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(initialProduct.defaultColorIndex ?? 0);
   const hasColorPreview = product.colorPreviewVideo || product.colorPreviewGif;
   const has3DViewer = !!product.modelUrl;
   const [viewMode, setViewMode] = useState<'3d' | 'colorPreview' | 'photos'>(
     has3DViewer ? '3d' : hasColorPreview ? 'colorPreview' : 'photos'
   );
+
+  // Admin mode for adding photos (check URL client-side to avoid static export issues)
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  useEffect(() => {
+    // Check for admin mode in URL params (client-side only)
+    const params = new URLSearchParams(window.location.search);
+    setIsAdmin(params.get('admin') === 'true');
+  }, []);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
   const selectedColor = FILAMENT_COLORS[selectedColorIndex];
@@ -106,6 +145,77 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
   const allImages = [product.image, ...(product.additionalImages || [])];
   const [selectedImage, setSelectedImage] = useState(0);
+
+  // Handle file upload
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isMain: boolean = false) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    setUploadStatus('Uploading...');
+
+    try {
+      for (const file of Array.from(files)) {
+        const url = `http://localhost:3001/upload-file/${product.slug}/${encodeURIComponent(file.name)}${isMain ? '?main=true' : ''}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          body: await file.arrayBuffer(),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        if (result.success) {
+          // Update product state with new images
+          setProduct(prev => ({
+            ...prev,
+            image: result.product.image,
+            additionalImages: result.product.additionalImages,
+          }));
+        }
+      }
+      setUploadStatus(`Successfully added ${files.length} photo(s)!`);
+      setTimeout(() => {
+        setShowUploadModal(false);
+        setUploadStatus(null);
+      }, 1500);
+    } catch (error) {
+      setUploadStatus(`Error: ${error instanceof Error ? error.message : 'Upload failed'}. Make sure photo-server is running.`);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  // Handle photo deletion
+  const handleDeletePhoto = async (imagePath: string) => {
+    if (!confirm('Remove this photo from the listing?')) return;
+
+    try {
+      const url = `http://localhost:3001/delete-photo/${product.slug}?path=${encodeURIComponent(imagePath)}`;
+      const response = await fetch(url, { method: 'DELETE' });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Delete failed');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        setProduct(prev => ({
+          ...prev,
+          image: result.product.image,
+          additionalImages: result.product.additionalImages,
+        }));
+        // Reset selected image if we deleted the current one
+        setSelectedImage(0);
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to delete photo');
+    }
+  };
 
   const handleAddToCart = () => {
     const variantId = product.hideColorOptions
@@ -360,6 +470,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     sizeIndex={selectedSizeIndex}
                     onColorChange={setSelectedColorIndex}
                   />
+                ) : product.useCompositePolygonViewer ? (
+                  <STLViewerCompositePolygon
+                    className="w-full h-full"
+                    colorIndex={selectedColorIndex}
+                    sizeIndex={selectedSizeIndex}
+                    onColorChange={setSelectedColorIndex}
+                  />
                 ) : (
                   <STLViewerInteractive
                     modelUrl={product.modelUrl!}
@@ -414,15 +531,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </div>
 
                 {/* Thumbnail Gallery */}
-                {allImages.length > 1 && (
-                  <div className="flex gap-3 overflow-x-auto pb-2">
-                    {allImages.map((img, index) => {
-                      const isBadge = img.includes('authorized') || img.includes('badge') || img.includes('seller');
-                      return (
+                <div className="flex gap-3 overflow-x-auto pb-2">
+                  {allImages.map((img, index) => {
+                    const isBadge = img.includes('authorized') || img.includes('badge') || img.includes('seller');
+                    const isMainImage = index === 0;
+                    return (
+                      <div key={index} className="relative flex-shrink-0">
                         <button
-                          key={index}
                           onClick={() => setSelectedImage(index)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden relative transition-all ${
+                          className={`w-20 h-20 rounded-lg overflow-hidden relative transition-all ${
                             selectedImage === index ? 'ring-2 ring-[#4A9FD4]' : 'opacity-70 hover:opacity-100'
                           }`}
                           style={{ backgroundColor: '#2a3649' }}
@@ -434,10 +551,40 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                             className={isBadge ? "object-contain p-1" : "object-cover"}
                           />
                         </button>
-                      );
-                    })}
-                  </div>
-                )}
+                        {/* Admin: Delete button (not on main image) */}
+                        {isAdmin && !isMainImage && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePhoto(img);
+                            }}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+                            title="Remove photo"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                        {/* Admin: Main image indicator */}
+                        {isAdmin && isMainImage && (
+                          <div className="absolute -top-1 -left-1 bg-[#4A9FD4] text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
+                            MAIN
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {/* Admin: Add Photo Button */}
+                  {isAdmin && (
+                    <button
+                      onClick={() => setShowUploadModal(true)}
+                      className="flex-shrink-0 w-20 h-20 rounded-lg flex items-center justify-center transition-all hover:bg-[#2a3649] border-2 border-dashed border-[#4A9FD4]"
+                      style={{ backgroundColor: 'rgba(74, 159, 212, 0.1)' }}
+                      title="Add photos"
+                    >
+                      <Plus className="w-8 h-8 text-[#4A9FD4]" />
+                    </button>
+                  )}
+                </div>
               </>
             )}
           </div>
@@ -450,14 +597,9 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3" style={{ color: '#E8EDF5' }}>
               {product.title}
             </h1>
-            <div className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#E8EDF5' }}>
+            <div className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: '#E8EDF5' }}>
               ${currentPrice.toFixed(2)}
             </div>
-            {selectedSize.multiplier > 1 && (
-              <div className="text-sm mb-4" style={{ color: '#9BA8BE' }}>
-                Base price: ${product.price.toFixed(2)} × {selectedSize.multiplier} ({selectedSize.name})
-              </div>
-            )}
 
             <p className="mb-5 text-base" style={{ color: '#9BA8BE' }}>
               {product.description}
@@ -486,17 +628,25 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               </div>
               <div>
                 <span className="font-semibold" style={{ color: '#E8EDF5' }}>Dimensions: </span>
-                <span style={{ color: '#9BA8BE' }}>{product.dimensions}</span>
+                <span style={{ color: '#9BA8BE' }}>
+                  {product.dimensionsBySize
+                    ? product.dimensionsBySize[selectedSize.name.toLowerCase() as 'small' | 'medium' | 'large']
+                    : scaleDimensions(product.dimensions, selectedSize.sizeScale)}
+                </span>
               </div>
               <div>
                 <span className="font-semibold" style={{ color: '#E8EDF5' }}>Shipping: </span>
                 <span style={{ color: '#9BA8BE' }}>
                   {currentPrice >= 35 ? 'FREE' : '$9.99'} - {product.shippingTime}
+                  {currentPrice < 35 && (
+                    <>. Spend ${(35 - currentPrice).toFixed(2)} more for free shipping</>
+                  )}
                 </span>
               </div>
             </div>
 
             {/* Size Selector */}
+            {!product.hideSizeOptions && (
             <div className="mb-5">
               <label className="block font-semibold mb-2" style={{ color: '#E8EDF5' }}>
                 Size:
@@ -524,6 +674,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 ))}
               </div>
             </div>
+            )}
 
             {/* Color Selector - hide if product has hideColorOptions */}
             {!product.hideColorOptions && (
@@ -604,6 +755,87 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           </div>
         </div>
       </div>
+
+      {/* Admin Upload Modal */}
+      {isAdmin && showUploadModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1e2739] rounded-xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setShowUploadModal(false)}
+              className="absolute top-4 right-4 text-[#9BA8BE] hover:text-white"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h2 className="text-xl font-bold text-[#4A9FD4] mb-2">Add Photos</h2>
+            <p className="text-[#9BA8BE] text-sm mb-6">{product.title}</p>
+
+            {uploadStatus && (
+              <div className={`mb-4 p-3 rounded-lg text-sm ${
+                uploadStatus.includes('Error') ? 'bg-red-500/20 text-red-400' :
+                uploadStatus.includes('Success') ? 'bg-green-500/20 text-green-400' :
+                'bg-blue-500/20 text-blue-400'
+              }`}>
+                {uploadStatus}
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {/* Add Additional Photos */}
+              <div>
+                <label className="block text-sm font-medium text-[#E8EDF5] mb-2">
+                  Add Additional Photos
+                </label>
+                <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-[#4A9FD4] rounded-lg cursor-pointer hover:bg-[#4A9FD4]/10 transition-colors">
+                  <Upload className="w-5 h-5 text-[#4A9FD4]" />
+                  <span className="text-[#4A9FD4]">Choose files</span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload(e, false)}
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
+
+              {/* Replace Main Image */}
+              <div>
+                <label className="block text-sm font-medium text-[#E8EDF5] mb-2">
+                  Replace Main Image
+                </label>
+                <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-[#9BA8BE] rounded-lg cursor-pointer hover:bg-[#9BA8BE]/10 transition-colors">
+                  <Upload className="w-5 h-5 text-[#9BA8BE]" />
+                  <span className="text-[#9BA8BE]">Choose file</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload(e, true)}
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <p className="mt-6 text-xs text-[#9BA8BE]">
+              Make sure the photo server is running:<br/>
+              <code className="bg-[#161c29] px-2 py-1 rounded mt-1 inline-block">
+                node scripts/photo-server.js
+              </code>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Admin mode indicator */}
+      {isAdmin && (
+        <div className="fixed bottom-4 right-4 bg-[#4A9FD4] text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+          Admin Mode
+        </div>
+      )}
     </div>
   );
 }

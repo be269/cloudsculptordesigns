@@ -290,7 +290,7 @@ export default function STLViewerCompositeAlien2({
       )}
 
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
+        camera={{ position: [0, 0.2, 3], fov: 50 }}
         style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
         onCreated={() => setIsLoading(false)}
       >
@@ -310,7 +310,7 @@ export default function STLViewerCompositeAlien2({
           alienColor2={currentColor.hex2}
           alienColor3={currentColor.hex3}
           isRotating={isRotating}
-          scale={currentSize.scale}
+          scale={1.0}
           isMetallic={currentColor.metallic}
         />
 

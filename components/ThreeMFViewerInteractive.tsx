@@ -225,7 +225,7 @@ export default function ThreeMFViewerInteractive({ modelUrl, className = "" }: T
           url={modelUrl}
           color={currentColor.hex}
           isRotating={isRotating}
-          scale={currentSize.scale}
+          scale={1.0}
           onLoaded={() => setIsLoading(false)}
         />
 
