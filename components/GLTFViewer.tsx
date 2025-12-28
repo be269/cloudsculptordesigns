@@ -221,7 +221,7 @@ export default function GLTFViewer({
         onReset={() => setHasError(false)}
       >
         <Canvas
-          camera={{ position: [0, 0, 4], fov: 50, near: 0.1, far: 1000 }}
+          camera={{ position: [0, 0, 3.2], fov: 50, near: 0.1, far: 1000 }}
           style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
         >
           <ambientLight intensity={1.5} />
