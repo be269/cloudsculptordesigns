@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { ShoppingCart, ArrowLeft, Check, Palette, Box, Plus, Upload, X } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Check, Palette, Box, Plus, Upload, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 
 // Import color constants from STLViewerInteractive
@@ -514,20 +514,53 @@ export default function ProductDetailClient({ product: initialProduct }: Product
               </div>
             ) : (
               <>
-                {/* Main Image */}
-                <div className="aspect-square rounded-lg overflow-hidden relative mb-4" style={{ backgroundColor: '#2a3649' }}>
-                  {(() => {
-                    const currentImg = allImages[selectedImage];
-                    const isBadge = currentImg.includes('authorized') || currentImg.includes('badge') || currentImg.includes('seller');
-                    return (
-                      <Image
-                        src={currentImg}
-                        alt={product.title}
-                        fill
-                        className={isBadge ? "object-contain p-8" : "object-cover"}
-                      />
-                    );
-                  })()}
+                {/* Main Image with Navigation Arrows */}
+                <div className="relative mb-4">
+                  <div className="aspect-square rounded-lg overflow-hidden relative" style={{ backgroundColor: '#2a3649' }}>
+                    {(() => {
+                      const currentImg = allImages[selectedImage];
+                      const isBadge = currentImg.includes('authorized') || currentImg.includes('badge') || currentImg.includes('seller');
+                      return (
+                        <Image
+                          src={currentImg}
+                          alt={product.title}
+                          fill
+                          className={isBadge ? "object-contain p-8" : "object-cover"}
+                        />
+                      );
+                    })()}
+                  </div>
+
+                  {/* Navigation Arrows */}
+                  {allImages.length > 1 && (
+                    <>
+                      {/* Previous Arrow */}
+                      <button
+                        onClick={() => setSelectedImage((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                        style={{
+                          backgroundColor: 'rgba(30, 39, 57, 0.85)',
+                          border: '1px solid #2a3649',
+                        }}
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="w-6 h-6" style={{ color: '#E8EDF5' }} />
+                      </button>
+
+                      {/* Next Arrow */}
+                      <button
+                        onClick={() => setSelectedImage((prev) => (prev === allImages.length - 1 ? 0 : prev + 1))}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                        style={{
+                          backgroundColor: 'rgba(30, 39, 57, 0.85)',
+                          border: '1px solid #2a3649',
+                        }}
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="w-6 h-6" style={{ color: '#E8EDF5' }} />
+                      </button>
+                    </>
+                  )}
                 </div>
 
                 {/* Thumbnail Gallery */}

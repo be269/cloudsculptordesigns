@@ -190,6 +190,7 @@ Products designed by pipecox include `/images/products/pipecox-authorized-seller
 - Created GitHub Actions auto-deploy workflow
 - Created Etsy sync scripts (not yet functional)
 - Created `deploy.sh` quick deploy script
+- Added photo navigation arrows (ChevronLeft/ChevronRight) to product detail page for cycling through product images
 
 ### Next Up
 - Finish product rendering pipeline
