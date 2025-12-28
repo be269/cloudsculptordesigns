@@ -858,7 +858,7 @@
         "slug": "alien-pilot-hover-pod",
         "image": "/images/products/alien-pilot-mask.jpg",
         "modelUrl": "/models/alienbot_web.stl",
-        "defaultColorIndex": 6,
+        "defaultColorIndex": 55,
         "modelRotationX": 90
     },
     {
