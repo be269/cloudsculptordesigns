@@ -3,32 +3,31 @@
 import { useRef, useState, useEffect, useCallback, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei/core/OrbitControls";
-import { ThreeMFLoader } from "three/examples/jsm/loaders/3MFLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { ErrorBoundary } from "react-error-boundary";
 
-interface ThreeMFModelProps {
+interface GLTFModelProps {
   url: string;
   isRotating: boolean;
   onLoaded?: () => void;
   onError?: (error: Error) => void;
 }
 
-function ThreeMFModel({ url, isRotating, onLoaded, onError }: ThreeMFModelProps) {
+function GLTFModel({ url, isRotating, onLoaded, onError }: GLTFModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [model, setModel] = useState<THREE.Group | null>(null);
 
   useEffect(() => {
-    const loader = new ThreeMFLoader();
+    const loader = new GLTFLoader();
 
     loader.load(
       url,
-      (object) => {
-        // 3MFLoader returns a Group containing meshes with materials
-        const group = object;
+      (gltf) => {
+        const scene = gltf.scene;
 
-        // Compute bounding box before any transformation
-        const box = new THREE.Box3().setFromObject(group);
+        // Compute bounding box
+        const box = new THREE.Box3().setFromObject(scene);
         const size = new THREE.Vector3();
         box.getSize(size);
         const center = new THREE.Vector3();
@@ -40,29 +39,31 @@ function ThreeMFModel({ url, isRotating, onLoaded, onError }: ThreeMFModelProps)
 
         // Create a parent group for transformations
         const parentGroup = new THREE.Group();
-
-        // Add the model to parent
-        parentGroup.add(group);
+        parentGroup.add(scene);
 
         // Center the model
-        group.position.set(-center.x, -center.y, -center.z);
+        scene.position.set(-center.x, -center.y, -center.z);
 
-        // Apply scale to parent
+        // Apply scale
         parentGroup.scale.setScalar(scale);
 
-        // Rotate to Y-up orientation (3MF is typically Z-up)
-        parentGroup.rotation.x = -Math.PI / 2;
+        // Rotate to Y-up orientation if needed (GLB should already be Y-up, but just in case)
+        // Check if the model seems to be Z-up by comparing bounds
+        if (size.z > size.y * 1.5) {
+          parentGroup.rotation.x = -Math.PI / 2;
+        }
 
-        // Ensure materials are double-sided for visibility
-        group.traverse((child) => {
+        // Ensure materials are properly configured
+        scene.traverse((child) => {
           if (child instanceof THREE.Mesh && child.material) {
-            if (Array.isArray(child.material)) {
-              child.material.forEach(mat => {
-                mat.side = THREE.DoubleSide;
-              });
-            } else {
-              child.material.side = THREE.DoubleSide;
-            }
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach(mat => {
+              mat.side = THREE.DoubleSide;
+              // Ensure vertex colors are used if present
+              if (child.geometry.attributes.color) {
+                mat.vertexColors = true;
+              }
+            });
           }
         });
 
@@ -71,11 +72,11 @@ function ThreeMFModel({ url, isRotating, onLoaded, onError }: ThreeMFModelProps)
       },
       (progress) => {
         if (progress.total > 0) {
-          console.log("Loading 3MF:", (progress.loaded / progress.total * 100).toFixed(0) + "%");
+          console.log("Loading GLB:", (progress.loaded / progress.total * 100).toFixed(0) + "%");
         }
       },
       (error) => {
-        console.error("Error loading 3MF:", error);
+        console.error("Error loading GLB:", error);
         onError?.(error instanceof Error ? error : new Error(String(error)));
       }
     );
@@ -141,15 +142,15 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetError
   );
 }
 
-interface ThreeMFViewerProps {
+interface GLTFViewerProps {
   modelUrl: string;
   className?: string;
 }
 
-export default function ThreeMFViewer({
+export default function GLTFViewer({
   modelUrl,
   className = "",
-}: ThreeMFViewerProps) {
+}: GLTFViewerProps) {
   const [isRotating, setIsRotating] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -160,7 +161,7 @@ export default function ThreeMFViewer({
     setIsRotating((prev) => !prev);
   }, []);
 
-  // Reset error state when modelUrl changes
+  // Reset state when modelUrl changes
   useEffect(() => {
     setHasError(false);
     setIsLoading(true);
@@ -213,7 +214,7 @@ export default function ThreeMFViewer({
         </div>
       )}
 
-      {/* 3D Canvas - fills entire container */}
+      {/* 3D Canvas */}
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onError={() => setHasError(true)}
@@ -231,7 +232,7 @@ export default function ThreeMFViewer({
           <hemisphereLight args={["#ffffff", "#444444", 0.5]} />
 
           <Suspense fallback={<LoadingFallback />}>
-            <ThreeMFModel
+            <GLTFModel
               url={modelUrl}
               isRotating={isRotating}
               onLoaded={handleModelLoaded}
@@ -249,7 +250,7 @@ export default function ThreeMFViewer({
         </Canvas>
       </ErrorBoundary>
 
-      {/* Minimal overlay - just rotation control */}
+      {/* Rotation control */}
       <div className="absolute top-3 right-3">
         <button
           onClick={toggleRotation}
@@ -274,7 +275,7 @@ export default function ThreeMFViewer({
         style={{ backgroundColor: "rgba(22, 28, 41, 0.95)", border: "1px solid #2a3649" }}
       >
         <span className="text-sm" style={{ color: "#E8EDF5" }}>
-          Painted 3MF Model
+          Painted 3D Model
         </span>
         <span className="text-xs" style={{ color: "#6B7280" }}>•</span>
         <span className="text-xs" style={{ color: "#9BA8BE" }}>

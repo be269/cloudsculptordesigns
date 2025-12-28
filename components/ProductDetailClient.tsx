@@ -52,9 +52,9 @@ const STLViewerCompositePolygon = dynamic(
   { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
 );
 
-// Dynamically import 3MF viewer for painted models
-const ThreeMFViewer = dynamic(
-  () => import("@/components/ThreeMFViewer"),
+// Dynamically import GLTF/GLB viewer for painted models
+const GLTFViewer = dynamic(
+  () => import("@/components/GLTFViewer"),
   { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
 );
 
@@ -90,7 +90,7 @@ interface Product {
   modelRotationY?: number;
   hideColorOptions?: boolean;
   hideSizeOptions?: boolean;
-  threeMFUrl?: string;
+  glbUrl?: string;
   dimensionsBySize?: {
     small: string;
     medium: string;
@@ -128,7 +128,7 @@ export default function ProductDetailClient({ product: initialProduct }: Product
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [selectedColorIndex, setSelectedColorIndex] = useState(initialProduct.defaultColorIndex ?? 0);
   const hasColorPreview = product.colorPreviewVideo || product.colorPreviewGif;
-  const has3DViewer = !!product.modelUrl || !!product.threeMFUrl;
+  const has3DViewer = !!product.modelUrl || !!product.glbUrl;
   const [viewMode, setViewMode] = useState<'3d' | 'colorPreview' | 'photos'>(
     has3DViewer ? '3d' : hasColorPreview ? 'colorPreview' : 'photos'
   );
@@ -484,9 +484,9 @@ export default function ProductDetailClient({ product: initialProduct }: Product
                     sizeIndex={selectedSizeIndex}
                     onColorChange={setSelectedColorIndex}
                   />
-                ) : product.threeMFUrl ? (
-                  <ThreeMFViewer
-                    modelUrl={product.threeMFUrl}
+                ) : product.glbUrl ? (
+                  <GLTFViewer
+                    modelUrl={product.glbUrl}
                     className="w-full h-full"
                   />
                 ) : (
