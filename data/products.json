@@ -856,7 +856,9 @@
         "etsyUrl": "https://www.etsy.com/listing/1695129461",
         "notes": "",
         "slug": "alien-pilot-hover-pod",
-        "image": "/images/products/alien-pilot-mask.jpg"
+        "image": "/images/products/alien-pilot-mask.jpg",
+        "threeMFUrl": "/models/AlienBot_Painted_3COLOR_PipeCox.3mf",
+        "hideColorOptions": true
     },
     {
         "id": "674800705",
