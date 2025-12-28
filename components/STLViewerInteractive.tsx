@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect, useMemo, useCallback } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import * as THREE from "three";
+import { ErrorBoundary } from "react-error-boundary";
 
 // Matte filament colors (Row 1 - 23 colors)
 export const MATTE_COLORS = [
@@ -281,6 +282,34 @@ interface STLViewerInteractiveProps {
   modelRotationY?: number;
 }
 
+// Loading component for Suspense
+function LoadingFallback() {
+  return (
+    <mesh>
+      <boxGeometry args={[0.5, 0.5, 0.5]} />
+      <meshStandardMaterial color="#4A9FD4" wireframe />
+    </mesh>
+  );
+}
+
+// Error fallback component
+function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#1e2739" }}>
+      <div className="text-center p-4">
+        <div className="text-red-400 mb-2">Failed to load 3D model</div>
+        <div className="text-xs text-[#9BA8BE] mb-3">{error.message}</div>
+        <button
+          onClick={resetErrorBoundary}
+          className="px-4 py-2 bg-[#4A9FD4] text-white rounded-lg text-sm hover:bg-[#3d8bc0]"
+        >
+          Try Again
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function STLViewerInteractive({
   modelUrl,
   className = "",
@@ -292,6 +321,7 @@ export default function STLViewerInteractive({
 }: STLViewerInteractiveProps) {
   const [isRotating, setIsRotating] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // Toggle rotation
   const toggleRotation = useCallback(() => {
@@ -300,6 +330,30 @@ export default function STLViewerInteractive({
 
   const currentColor = FILAMENT_COLORS[colorIndex];
   const currentSize = SIZE_OPTIONS[sizeIndex];
+
+  // Reset error state when modelUrl changes
+  useEffect(() => {
+    setHasError(false);
+    setIsLoading(true);
+  }, [modelUrl]);
+
+  if (hasError) {
+    return (
+      <div className={`relative ${className}`} style={{ minHeight: "100%", height: "100%" }}>
+        <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#1e2739", borderRadius: "8px" }}>
+          <div className="text-center p-4">
+            <div className="text-red-400 mb-2">Failed to load 3D model</div>
+            <button
+              onClick={() => setHasError(false)}
+              className="px-4 py-2 bg-[#4A9FD4] text-white rounded-lg text-sm hover:bg-[#3d8bc0]"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative ${className}`} style={{ minHeight: "100%", height: "100%" }}>
@@ -316,38 +370,46 @@ export default function STLViewerInteractive({
       )}
 
       {/* 3D Canvas - fills entire container */}
-      <Canvas
-        camera={{ position: [0, -0.3, 2.5], fov: 50, near: 0.1, far: 1000 }}
-        style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
-        onCreated={() => setIsLoading(false)}
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={() => setHasError(true)}
+        onReset={() => setHasError(false)}
       >
-        <ambientLight intensity={1.2} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        <directionalLight position={[-5, -5, -5]} intensity={0.6} />
-        <directionalLight position={[0, -5, 5]} intensity={0.5} />
-        <directionalLight position={[0, 5, -5]} intensity={0.5} />
-        <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
+        <Canvas
+          camera={{ position: [0, -0.3, 2.5], fov: 50, near: 0.1, far: 1000 }}
+          style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
+          onCreated={() => setIsLoading(false)}
+        >
+          <ambientLight intensity={1.2} />
+          <directionalLight position={[5, 5, 5]} intensity={0.8} />
+          <directionalLight position={[-5, -5, -5]} intensity={0.6} />
+          <directionalLight position={[0, -5, 5]} intensity={0.5} />
+          <directionalLight position={[0, 5, -5]} intensity={0.5} />
+          <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
-        <Model
-          url={modelUrl}
-          color={currentColor.hex}
-          color2={currentColor.hex2}
-          color3={currentColor.hex3}
-          isRotating={isRotating}
-          scale={1.0}
-          isMetallic={currentColor.metallic}
-          modelRotationX={modelRotationX}
-          modelRotationY={modelRotationY}
-        />
+          <Suspense fallback={<LoadingFallback />}>
+            <Model
+              url={modelUrl}
+              color={currentColor.hex}
+              color2={currentColor.hex2}
+              color3={currentColor.hex3}
+              isRotating={isRotating}
+              scale={1.0}
+              isMetallic={currentColor.metallic}
+              modelRotationX={modelRotationX}
+              modelRotationY={modelRotationY}
+            />
+          </Suspense>
 
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          minDistance={2}
-          maxDistance={8}
-          target={[0, -0.3, 0]}
-        />
-      </Canvas>
+          <OrbitControls
+            enableZoom={true}
+            enablePan={false}
+            minDistance={2}
+            maxDistance={8}
+            target={[0, -0.3, 0]}
+          />
+        </Canvas>
+      </ErrorBoundary>
 
       {/* Minimal overlay - just rotation control */}
       <div className="absolute top-3 right-3">
