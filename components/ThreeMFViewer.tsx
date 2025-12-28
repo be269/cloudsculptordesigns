@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useMemo, useCallback, Suspense } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useRef, useState, useEffect, useCallback, Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { ThreeMFLoader } from "three/examples/jsm/loaders/3MFLoader.js";
 import * as THREE from "three";
@@ -10,12 +10,13 @@ import { ErrorBoundary } from "react-error-boundary";
 interface ThreeMFModelProps {
   url: string;
   isRotating: boolean;
+  onLoaded?: () => void;
+  onError?: (error: Error) => void;
 }
 
-function ThreeMFModel({ url, isRotating }: ThreeMFModelProps) {
+function ThreeMFModel({ url, isRotating, onLoaded, onError }: ThreeMFModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [model, setModel] = useState<THREE.Group | null>(null);
-  const { scene } = useThree();
 
   useEffect(() => {
     const loader = new ThreeMFLoader();
@@ -24,37 +25,58 @@ function ThreeMFModel({ url, isRotating }: ThreeMFModelProps) {
       url,
       (object) => {
         // 3MFLoader returns a Group containing meshes with materials
-        // Clone it so we can manipulate it
-        const group = object.clone();
+        const group = object;
 
-        // Rotate to Y-up orientation (3MF is typically Z-up)
-        group.rotation.x = -Math.PI / 2;
-
-        // Compute bounding box to center and scale
+        // Compute bounding box before any transformation
         const box = new THREE.Box3().setFromObject(group);
+        const size = new THREE.Vector3();
+        box.getSize(size);
         const center = new THREE.Vector3();
         box.getCenter(center);
 
-        // Center the model
-        group.position.sub(center);
-
-        // Scale to fit in view
-        const size = new THREE.Vector3();
-        box.getSize(size);
+        // Scale to fit in view (normalize to ~2 units)
         const maxDim = Math.max(size.x, size.y, size.z);
         const scale = 2.0 / maxDim;
-        group.scale.setScalar(scale);
 
-        // Re-center after rotation
-        group.position.y = 0;
+        // Create a parent group for transformations
+        const parentGroup = new THREE.Group();
 
-        setModel(group);
+        // Add the model to parent
+        parentGroup.add(group);
+
+        // Center the model
+        group.position.set(-center.x, -center.y, -center.z);
+
+        // Apply scale to parent
+        parentGroup.scale.setScalar(scale);
+
+        // Rotate to Y-up orientation (3MF is typically Z-up)
+        parentGroup.rotation.x = -Math.PI / 2;
+
+        // Ensure materials are double-sided for visibility
+        group.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.material) {
+            if (Array.isArray(child.material)) {
+              child.material.forEach(mat => {
+                mat.side = THREE.DoubleSide;
+              });
+            } else {
+              child.material.side = THREE.DoubleSide;
+            }
+          }
+        });
+
+        setModel(parentGroup);
+        onLoaded?.();
       },
       (progress) => {
-        console.log("Loading 3MF:", (progress.loaded / progress.total * 100).toFixed(0) + "%");
+        if (progress.total > 0) {
+          console.log("Loading 3MF:", (progress.loaded / progress.total * 100).toFixed(0) + "%");
+        }
       },
       (error) => {
         console.error("Error loading 3MF:", error);
+        onError?.(error instanceof Error ? error : new Error(String(error)));
       }
     );
 
@@ -131,6 +153,7 @@ export default function ThreeMFViewer({
   const [isRotating, setIsRotating] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Toggle rotation
   const toggleRotation = useCallback(() => {
@@ -141,7 +164,18 @@ export default function ThreeMFViewer({
   useEffect(() => {
     setHasError(false);
     setIsLoading(true);
+    setErrorMessage("");
   }, [modelUrl]);
+
+  const handleModelLoaded = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  const handleModelError = useCallback((error: Error) => {
+    setHasError(true);
+    setErrorMessage(error.message);
+    setIsLoading(false);
+  }, []);
 
   if (hasError) {
     return (
@@ -149,8 +183,12 @@ export default function ThreeMFViewer({
         <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#1e2739", borderRadius: "8px" }}>
           <div className="text-center p-4">
             <div className="text-red-400 mb-2">Failed to load 3D model</div>
+            {errorMessage && <div className="text-xs text-[#9BA8BE] mb-3">{errorMessage}</div>}
             <button
-              onClick={() => setHasError(false)}
+              onClick={() => {
+                setHasError(false);
+                setIsLoading(true);
+              }}
               className="px-4 py-2 bg-[#4A9FD4] text-white rounded-lg text-sm hover:bg-[#3d8bc0]"
             >
               Try Again
@@ -182,21 +220,22 @@ export default function ThreeMFViewer({
         onReset={() => setHasError(false)}
       >
         <Canvas
-          camera={{ position: [0, 0, 3], fov: 50, near: 0.1, far: 1000 }}
+          camera={{ position: [0, 0, 4], fov: 50, near: 0.1, far: 1000 }}
           style={{ background: "linear-gradient(180deg, #4a5a6d 0%, #3a4a5d 50%, #2a3a4d 100%)", borderRadius: "8px" }}
-          onCreated={() => setIsLoading(false)}
         >
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[5, 5, 5]} intensity={0.8} />
-          <directionalLight position={[-5, -5, -5]} intensity={0.6} />
-          <directionalLight position={[0, -5, 5]} intensity={0.5} />
-          <directionalLight position={[0, 5, -5]} intensity={0.5} />
-          <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
+          <ambientLight intensity={1.5} />
+          <directionalLight position={[5, 5, 5]} intensity={1.0} />
+          <directionalLight position={[-5, -5, -5]} intensity={0.8} />
+          <directionalLight position={[0, -5, 5]} intensity={0.6} />
+          <directionalLight position={[0, 5, -5]} intensity={0.6} />
+          <hemisphereLight args={["#ffffff", "#444444", 0.5]} />
 
           <Suspense fallback={<LoadingFallback />}>
             <ThreeMFModel
               url={modelUrl}
               isRotating={isRotating}
+              onLoaded={handleModelLoaded}
+              onError={handleModelError}
             />
           </Suspense>
 
@@ -204,7 +243,7 @@ export default function ThreeMFViewer({
             enableZoom={true}
             enablePan={false}
             minDistance={1.5}
-            maxDistance={8}
+            maxDistance={10}
             target={[0, 0, 0]}
           />
         </Canvas>
