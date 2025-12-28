@@ -857,9 +857,8 @@
         "notes": "",
         "slug": "alien-pilot-hover-pod",
         "image": "/images/products/alien-pilot-mask.jpg",
-        "glbUrl": "/models/AlienBot_Painted.glb",
-        "hideColorOptions": true,
-        "hideSizeOptions": true
+        "modelUrl": "/models/alienbot_web.stl",
+        "defaultColorIndex": 6
     },
     {
         "id": "674800705",
