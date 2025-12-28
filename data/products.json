@@ -52,7 +52,7 @@
         "notes": "Eyes will be black on actual print (unless specified in order notes)",
         "slug": "alien-visitor-2",
         "image": "/images/products/alien-visitor-2.jpg",
-        "modelUrl": "/models/Alien_2.stl",
+        "modelUrl": "/models/Alien_2_web.stl",
         "defaultColorIndex": 6,
         "dimensionsBySize": {
             "small": "Approximately 4\" tall",
@@ -84,7 +84,7 @@
         "notes": "Eyes will be black on actual print (unless specified in order notes)",
         "slug": "alien-visitor-3",
         "image": "/images/products/renders/Alien_3_render.jpg",
-        "modelUrl": "/models/Alien_3.stl",
+        "modelUrl": "/models/Alien_3_web.stl",
         "defaultColorIndex": 6,
         "dimensionsBySize": {
             "small": "Approximately 4\" tall",
@@ -114,7 +114,7 @@
         "notes": "Eyes will be black on actual print (unless specified in order notes)",
         "slug": "alien-visitor-4",
         "image": "/images/products/renders/Alien_4_render.jpg",
-        "modelUrl": "/models/Alien_4.stl",
+        "modelUrl": "/models/Alien_4_web.stl",
         "defaultColorIndex": 6,
         "dimensionsBySize": {
             "small": "Approximately 4\" tall",
@@ -469,7 +469,7 @@
             "/images/products/oni-devil-7.jpg",
             "/images/products/oni-devil-1.jpg"
         ],
-        "modelUrl": "/models/oni_wall_mask.stl",
+        "modelUrl": "/models/oni_wall_mask_web.stl",
         "modelRotationX": 90
     },
     {
@@ -561,7 +561,7 @@
         "notes": "",
         "slug": "robot-hand-controller-holder",
         "image": "/images/products/robot-hand-controller-holder.jpg",
-        "modelUrl": "/models/robot_hand.stl",
+        "modelUrl": "/models/robot_hand_web.stl",
         "defaultColorIndex": 24,
         "additionalImages": [
             "/images/products/renders/robot_hand_render.jpg"
@@ -832,7 +832,7 @@
             "/images/products/foo-lion-10.jpg",
             "/images/products/foo-lion-1.jpg"
         ],
-        "modelUrl": "/models/foo_lion.stl",
+        "modelUrl": "/models/foo_lion_web.stl",
         "defaultColorIndex": 24,
         "modelRotationX": 90,
         "modelRotationY": 0
@@ -879,7 +879,7 @@
         "notes": "",
         "slug": "3d-printed-castle",
         "image": "/images/products/german-castle.jpg",
-        "modelUrl": "/models/castle.stl",
+        "modelUrl": "/models/castle_web.stl",
         "defaultColorIndex": 14,
         "additionalImages": [
             "/images/products/renders/castle_render.jpg"
@@ -1133,7 +1133,7 @@
         "notes": "",
         "slug": "chinese-dragon-wine-holder",
         "image": "/images/products/asian-dragon-wine-holder.jpg",
-        "modelUrl": "/models/chinese_dragon.stl",
+        "modelUrl": "/models/chinese_dragon_web.stl",
         "defaultColorIndex": 23,
         "additionalImages": [
             "/images/products/renders/chinese_dragon_render.jpg"

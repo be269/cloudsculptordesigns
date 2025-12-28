@@ -269,8 +269,8 @@ export default function STLViewerCompositeLamp({
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
         <CompositeLampScene
-          baseUrl="/models/magic_lamp_base.stl"
-          lampUrl="/models/magic_lamp.stl"
+          baseUrl="/models/magic_lamp_base_web.stl"
+          lampUrl="/models/magic_lamp_web.stl"
           lampColor={currentColor.hex}
           lampColor2={currentColor.hex2}
           lampColor3={currentColor.hex3}

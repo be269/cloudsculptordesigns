@@ -302,8 +302,8 @@ export default function STLViewerCompositeAlien2({
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
         <CompositeAlien2Scene
-          bodyUrl="/models/et2_body.stl"
-          headUrl="/models/et2_head.stl"
+          bodyUrl="/models/et2_body_web.stl"
+          headUrl="/models/et2_head_web.stl"
           leftArmUrl="/models/et2_left_arm.stl"
           rightArmUrl="/models/et2_right_arm.stl"
           alienColor={currentColor.hex}

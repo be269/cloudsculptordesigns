@@ -270,7 +270,7 @@ export default function STLViewerCompositePolygon({
 
         <CompositePolygonScene
           baseUrl="/models/polygon_vase_base.stl"
-          vaseUrl="/models/polygon_vase.stl"
+          vaseUrl="/models/polygon_vase_web.stl"
           vaseColor={currentColor.hex}
           vaseColor2={currentColor.hex2}
           vaseColor3={currentColor.hex3}

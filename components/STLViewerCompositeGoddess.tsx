@@ -269,8 +269,8 @@ export default function STLViewerCompositeGoddess({
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
         <CompositeGoddessScene
-          baseUrl="/models/forest_goddess_base.stl"
-          planterUrl="/models/forest_goddess.stl"
+          baseUrl="/models/forest_goddess_base_web.stl"
+          planterUrl="/models/forest_goddess_web.stl"
           planterColor={currentColor.hex}
           planterColor2={currentColor.hex2}
           planterColor3={currentColor.hex3}
