@@ -1,34 +1,11 @@
 "use client";
 
-import { useRef, useState, useMemo, useCallback, useEffect, Suspense } from "react";
+import { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import * as THREE from "three";
-import { ErrorBoundary } from "react-error-boundary";
 import { FILAMENT_COLORS, SIZE_OPTIONS } from "./STLViewerInteractive";
-
-// Loading component for Suspense
-function LoadingFallback() {
-  return (
-    <mesh>
-      <boxGeometry args={[0.5, 0.5, 0.5]} />
-      <meshStandardMaterial color="#4A9FD4" wireframe />
-    </mesh>
-  );
-}
-
-// Error fallback component
-function ErrorFallback({ error }: { error: Error }) {
-  return (
-    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#1e2739" }}>
-      <div className="text-center p-4">
-        <p style={{ color: "#E8EDF5" }}>Unable to load 3D model</p>
-        <p className="text-sm mt-2" style={{ color: "#9BA8BE" }}>{error.message}</p>
-      </div>
-    </div>
-  );
-}
 
 interface ModelProps {
   url: string;
@@ -37,11 +14,10 @@ interface ModelProps {
   color3?: string;
   isMetallic: boolean;
   position?: [number, number, number];
-  rotationY?: number;
   scale?: number;
 }
 
-function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], rotationY = 0, scale: externalScale = 1 }: ModelProps) {
+function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], scale: modelScale = 1 }: ModelProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const rawGeometry = useLoader(STLLoader, url);
 
@@ -51,11 +27,6 @@ function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], r
 
     // Rotate geometry so the flat bottom faces down
     cloned.rotateX(-Math.PI / 2);
-
-    // Apply additional Y rotation if specified
-    if (rotationY !== 0) {
-      cloned.rotateY((rotationY * Math.PI) / 180);
-    }
 
     cloned.computeBoundingBox();
 
@@ -68,18 +39,14 @@ function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], r
     cloned.translate(-center.x, -center.y, -center.z);
     cloned.computeVertexNormals();
 
-    // Recompute bounding box after centering
-    cloned.computeBoundingBox();
-    const centeredBox = cloned.boundingBox!;
-
     // Calculate scale to fit in view
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z);
 
     // Get Y bounds for gradient (after centering)
-    const yMin = centeredBox.min.y;
-    const yMax = centeredBox.max.y;
+    const yMin = box.min.y - center.y;
+    const yMax = box.max.y - center.y;
 
     return {
       geometry: cloned,
@@ -87,7 +54,7 @@ function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], r
       yMin,
       yMax
     };
-  }, [rawGeometry, rotationY]);
+  }, [rawGeometry]);
 
   // Colors as THREE.Color - update when color props change
   const colorObj = useMemo(() => new THREE.Color(color), [color]);
@@ -172,7 +139,7 @@ function Model({ url, color, color2, color3, isMetallic, position = [0, 0, 0], r
     }
   }, [color, color2Obj, color3Obj]);
 
-  const finalScale = baseScale * externalScale;
+  const finalScale = baseScale * modelScale;
 
   return (
     <mesh geometry={geometry} scale={[finalScale, finalScale, finalScale]} position={position}>
@@ -218,12 +185,6 @@ function CompositeGorillaScene({
       groupRef.current.rotation.y += delta * 0.5;
     }
   });
-
-  // Based on the bounding box analysis:
-  // Body: X(-5.36 to 187.67), Y(0 to 192.05), Z(0 to 146.41) - centered at ~91mm X, ~96mm Y, ~73mm Z
-  // Head: X(-26.99 to 26.99), Y(-42.46 to 42.46), Z(0 to 58.72) - centered at origin
-  // Head should sit on top of body, roughly at Z=146 (top of body)
-  // The head's center needs to align with where the neck would be on the body
 
   return (
     <group ref={groupRef} scale={[scale, scale, scale]}>
@@ -275,7 +236,6 @@ export default function STLViewerCompositeGorilla({
   const currentSize = SIZE_OPTIONS[sizeIndex];
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
     <div className={`relative ${className}`} style={{ minHeight: "100%", height: "100%" }}>
       {isLoading && (
         <div
@@ -301,18 +261,16 @@ export default function STLViewerCompositeGorilla({
         <directionalLight position={[0, 5, -5]} intensity={0.5} />
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
-        <Suspense fallback={<LoadingFallback />}>
-          <CompositeGorillaScene
-            bodyUrl="/models/gorilla_body_web.stl"
-            headUrl="/models/gorilla_head_web.stl"
-            gorillaColor={currentColor.hex}
-            gorillaColor2={currentColor.hex2}
-            gorillaColor3={currentColor.hex3}
-            isRotating={isRotating}
-            scale={1.0}
-            isMetallic={currentColor.metallic}
-          />
-        </Suspense>
+        <CompositeGorillaScene
+          bodyUrl="/models/gorilla_body_web.stl"
+          headUrl="/models/gorilla_head_web.stl"
+          gorillaColor={currentColor.hex}
+          gorillaColor2={currentColor.hex2}
+          gorillaColor3={currentColor.hex3}
+          isRotating={isRotating}
+          scale={1.0}
+          isMetallic={currentColor.metallic}
+        />
 
         <OrbitControls
           enableZoom={true}
@@ -362,6 +320,5 @@ export default function STLViewerCompositeGorilla({
         </span>
       </div>
     </div>
-    </ErrorBoundary>
   );
 }
