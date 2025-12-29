@@ -192,6 +192,7 @@
             "/images/products/brain-model-11.jpg"
         ],
         "modelUrl": "/models/brain.stl",
+        "modelScale": 0.7,
         "defaultColorIndex": 17
     },
     {
@@ -214,7 +215,7 @@
         "notes": "",
         "slug": "magic-lamp-incense-holder",
         "image": "/images/products/magic-lamp-incense-holder.jpg",
-        "modelUrl": "/models/magic_lamp.stl",
+        "modelUrl": "/models/magic_lamp_web.stl",
         "useCompositeLampViewer": true,
         "defaultColorIndex": 24,
         "additionalImages": [
@@ -240,7 +241,8 @@
         "etsyUrl": "https://www.etsy.com/listing/1315553004",
         "notes": "",
         "slug": "articulated-asian-style-dragon",
-        "image": "/images/products/articulated-asian-style-dragon.jpg"
+        "image": "/images/products/articulated-asian-style-dragon.jpg",
+        "modelUrl": "/models/chinese_dragon_web.stl"
     },
     {
         "id": "1315551212",
@@ -261,7 +263,10 @@
         "etsyUrl": "https://www.etsy.com/listing/1315551212",
         "notes": "",
         "slug": "3d-printed-articulated-skeletal-dragon",
-        "image": "/images/products/3d-printed-articulated-skeletal-dragon.jpg"
+        "image": "/images/products/3d-printed-articulated-skeletal-dragon.jpg",
+        "modelUrl": "/models/skeletal_dragon_web.stl",
+        "modelScale": 0.7,
+        "defaultColorIndex": 50
     },
     {
         "id": "1315547148",
@@ -282,7 +287,10 @@
         "etsyUrl": "https://www.etsy.com/listing/1315547148",
         "notes": "",
         "slug": "3d-printed-articulated-steampunk-dragon",
-        "image": "/images/products/3d-printed-articulated-steampunk-dragon.jpg"
+        "image": "/images/products/3d-printed-articulated-steampunk-dragon.jpg",
+        "modelUrl": "/models/steampunk_dragon_web.stl",
+        "modelScale": 0.7,
+        "defaultColorIndex": 42
     },
     {
         "id": "1523259675",
@@ -324,7 +332,9 @@
         "etsyUrl": "https://www.etsy.com/listing/821915019",
         "notes": "",
         "slug": "dragon-flexi-3d-printed-articulated",
-        "image": "/images/products/dragon-flexi-3d-printed-articulated.jpg"
+        "image": "/images/products/dragon-flexi-3d-printed-articulated.jpg",
+        "modelUrl": "/models/flexi_dragon_web.stl",
+        "defaultColorIndex": 39
     },
     {
         "id": "1682167000",
@@ -357,7 +367,7 @@
             "/images/products/forest-goddess-08.jpg",
             "/images/products/forest-goddess-09.jpg"
         ],
-        "modelUrl": "/models/forest_goddess.stl",
+        "modelUrl": "/models/forest_goddess_web.stl",
         "useCompositeGoddessViewer": true,
         "defaultColorIndex": 30
     },
@@ -407,6 +417,7 @@
         "notes": "",
         "slug": "dragon-egg-3d-printed",
         "image": "/images/products/dragon-egg.jpg",
+        "modelUrl": "/models/dragon_egg_web.stl",
         "additionalImages": [
             "/images/products/dragon-egg-02.jpg",
             "/images/products/dragon-egg-03.jpg",
@@ -435,10 +446,19 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1557901842",
-        "notes": "",
         "slug": "midgard-serpent-jormungandr",
-        "image": "/images/products/asian-dragon-wine-holder.jpg",
-        "hideSizeOptions": true
+        "image": "/images/products/midgard-serpent-01.jpg",
+        "hideSizeOptions": true,
+        "modelUrl": "/models/midgard_serpent_web.stl",
+        "defaultColorIndex": 7,
+        "notes": "This model is printed in 2 colors - choose your primary color for the body from the selection above, and note your secondary color for the side markings in the order notes.",
+        "additionalImages": [
+            "/images/products/midgard-serpent-02.jpg",
+            "/images/products/midgard-serpent-03.jpg",
+            "/images/products/midgard-serpent-04.jpg",
+            "/images/products/midgard-serpent-05.jpg",
+            "/images/products/midgard-serpent-06.jpg"
+        ]
     },
     {
         "id": "1323402183",
@@ -470,7 +490,8 @@
             "/images/products/oni-devil-1.jpg"
         ],
         "modelUrl": "/models/oni_wall_mask_web.stl",
-        "modelRotationX": 90
+        "modelRotationX": 90,
+        "defaultColorIndex": 24
     },
     {
         "id": "1701804727",
@@ -489,9 +510,12 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1701804727",
-        "notes": "",
         "slug": "behind-oni-wall-mask",
         "image": "/images/products/behind-oni-wall-mask.jpg",
+        "modelUrl": "/models/behind_oni_web.stl",
+        "modelRotationX": 90,
+        "defaultColorIndex": 15,
+        "notes": "Select your primary color for the center face from the selection above. Note your secondary color for the outer pieces in the order notes.",
         "dimensionsBySize": {
             "small": "Approximately 4\" tall",
             "medium": "Approximately 8\" tall",
@@ -536,9 +560,11 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1699830749",
-        "notes": "",
         "slug": "female-face-fidget-toy",
-        "image": "/images/products/female-face-fidget-toy-pixels.jpg"
+        "image": "/images/products/female-face-fidget-toy-pixels.jpg",
+        "modelUrl": "/models/pixel_girl_web.stl",
+        "modelRotationX": 90,
+        "defaultColorIndex": 38
     },
     {
         "id": "1604860610",
@@ -587,8 +613,9 @@
         "notes": "",
         "slug": "futuristic-cityscape-head-planter",
         "image": "/images/products/futuristic-cityscape-head-planter.jpg",
-        "modelUrl": "/models/polygon_vase.stl",
+        "modelUrl": "/models/polygon_vase_web.stl",
         "useCompositePolygonViewer": true,
+        "modelScale": 0.7,
         "defaultColorIndex": 33
     },
     {
@@ -768,9 +795,11 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/822773564",
-        "notes": "",
         "slug": "octopus-articulated",
-        "image": "/images/products/adorable-octopus.jpg"
+        "image": "/images/products/adorable-octopus.jpg",
+        "modelUrl": "/models/octopus_web.stl",
+        "defaultColorIndex": 10,
+        "notes": "Choose your primary body color from the selection above. Note your preferred eye color in the order notes."
     },
     {
         "id": "884958937",
@@ -926,9 +955,40 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1711255588",
-        "notes": "",
         "slug": "alien-hand-controller-holder",
-        "image": "/images/products/alien-hand.jpg"
+        "image": "/images/products/alien-hand.jpg",
+        "modelUrl": "/models/alien_hand_web.stl",
+        "notes": "Select your primary color for the hand from the selection above. Note your preferred color for the base in the order notes."
+    },
+    {
+        "id": "6finger-alien-hand",
+        "title": "6-Finger Alien Hand Video Game Controller Holder",
+        "price": 14.99,
+        "category": "Gaming",
+        "description": "An even more extraterrestrial twist on our popular alien hand holder! This six-fingered alien hand reaches up to cradle your gamepad with an otherworldly grip. The extra fingers provide added stability and an even more alien aesthetic. Perfect for gamers who want their setup to look truly out of this world.",
+        "materials": "PLA Plastic, 3D-printed",
+        "dimensions": "Approximately 6 inches tall",
+        "features": [
+            "Controller holder",
+            "6-finger alien hand design",
+            "Gamer gift"
+        ],
+        "stock": 999,
+        "shippingCost": "FREE",
+        "shippingTime": "Ships within 1 week",
+        "etsyUrl": "https://www.etsy.com/listing/1711255588",
+        "slug": "6-finger-alien-hand-controller-holder",
+        "image": "/images/products/6-finger-alien-hand-01.jpg",
+        "modelUrl": "/models/6_finger_alien_hand_web.stl",
+        "defaultColorIndex": 4,
+        "notes": "Select your primary color for the hand from the selection above. Note your preferred color for the base in the order notes.",
+        "additionalImages": [
+            "/images/products/6-finger-alien-hand-02.jpg",
+            "/images/products/6-finger-alien-hand-03.jpg",
+            "/images/products/6-finger-alien-hand-04.jpg",
+            "/images/products/6-finger-alien-hand-05.jpg",
+            "/images/products/6-finger-alien-hand-06.jpg"
+        ]
     },
     {
         "id": "1653638491",
@@ -970,7 +1030,8 @@
         "etsyUrl": "https://www.etsy.com/listing/707568795",
         "notes": "",
         "slug": "3d-printed-sugar-skull",
-        "image": "/images/products/sugar-skull.jpg"
+        "image": "/images/products/sugar-skull.jpg",
+        "modelUrl": "/models/sugar_skull_web.stl"
     },
     {
         "id": "1741891811",
@@ -991,7 +1052,9 @@
         "etsyUrl": "https://www.etsy.com/listing/1741891811",
         "notes": "",
         "slug": "rotating-face-planter-oni",
-        "image": "/images/products/rotating-face-planter.jpg"
+        "image": "/images/products/rotating-face-planter.jpg",
+        "modelUrl": "/models/yokai_blend_pot_web.stl",
+        "defaultColorIndex": 15
     },
     {
         "id": "548465135",
@@ -1013,6 +1076,7 @@
         "notes": "",
         "slug": "dragon-egg-got-inspired",
         "image": "/images/products/dragon-egg.jpg",
+        "defaultColorIndex": 51,
         "additionalImages": [
             "/images/products/dragon-egg-02.jpg",
             "/images/products/dragon-egg-03.jpg",
@@ -1064,7 +1128,9 @@
         "etsyUrl": "https://www.etsy.com/listing/525785586",
         "notes": "Decorative only",
         "slug": "dragon-wine-goblet",
-        "image": "/images/products/dragon-wine-goblet.jpg"
+        "image": "/images/products/dragon-wine-goblet.jpg",
+        "useCompositeDragonGobletViewer": true,
+        "hideColorOptions": true
     },
     {
         "id": "1383119142",
@@ -1136,7 +1202,7 @@
         "notes": "",
         "slug": "chinese-dragon-wine-holder",
         "image": "/images/products/asian-dragon-wine-holder.jpg",
-        "modelUrl": "/models/chinese_dragon_web.stl",
+        "modelUrl": "/models/chinese_dragon_wine_holder_web.stl",
         "defaultColorIndex": 23,
         "additionalImages": [
             "/images/products/renders/chinese_dragon_render.jpg"
@@ -1201,9 +1267,10 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1717272466",
-        "notes": "",
         "slug": "octopus-wine-bottle-holder",
-        "image": "/images/products/octopus-wine-holder.jpg"
+        "image": "/images/products/octopus-wine-holder.jpg",
+        "modelUrl": "/models/octopus_wine_holder_web.stl",
+        "defaultColorIndex": 39
     },
     {
         "id": "1715686857",
@@ -1222,8 +1289,8 @@
         "shippingCost": "FREE",
         "shippingTime": "Ships within 1 week",
         "etsyUrl": "https://www.etsy.com/listing/1715686857",
-        "notes": "",
         "slug": "alien-wine-bottle-holder",
-        "image": "/images/products/alien-wine-holder.jpg"
+        "image": "/images/products/alien-wine-holder.jpg",
+        "modelUrl": "/models/alien_wine_holder_web.stl"
     }
 ]
