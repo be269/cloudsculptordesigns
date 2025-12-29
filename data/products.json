@@ -541,7 +541,10 @@
         "etsyUrl": "https://www.etsy.com/listing/1504035698",
         "notes": "",
         "slug": "gorilla-flexible-3d-printed",
-        "image": "/images/products/gorilla-flexible-3d-printed.jpg"
+        "image": "/images/products/gorilla-flexible-3d-printed.jpg",
+        "modelUrl": "/models/gorilla_body_web.stl",
+        "useCompositeGorillaViewer": true,
+        "defaultColorIndex": 16
     },
     {
         "id": "1699830749",

@@ -58,6 +58,12 @@ const STLViewerCompositeDragonGoblet = dynamic(
   { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
 );
 
+// Dynamically import composite gorilla viewer
+const STLViewerCompositeGorilla = dynamic(
+  () => import("@/components/STLViewerCompositeGorilla"),
+  { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: '#161c29' }}><span className="text-[#9BA8BE]">Loading 3D Viewer...</span></div> }
+);
+
 // Dynamically import GLTF/GLB viewer for painted models
 const GLTFViewer = dynamic(
   () => import("@/components/GLTFViewer"),
@@ -93,6 +99,7 @@ interface Product {
   useCompositeAlien2Viewer?: boolean;
   useCompositePolygonViewer?: boolean;
   useCompositeDragonGobletViewer?: boolean;
+  useCompositeGorillaViewer?: boolean;
   modelRotationX?: number;
   modelRotationY?: number;
   hideColorOptions?: boolean;
@@ -494,6 +501,13 @@ export default function ProductDetailClient({ product: initialProduct }: Product
                 ) : product.useCompositeDragonGobletViewer ? (
                   <STLViewerCompositeDragonGoblet
                     className="w-full h-full"
+                  />
+                ) : product.useCompositeGorillaViewer ? (
+                  <STLViewerCompositeGorilla
+                    className="w-full h-full"
+                    colorIndex={selectedColorIndex}
+                    sizeIndex={selectedSizeIndex}
+                    onColorChange={setSelectedColorIndex}
                   />
                 ) : product.glbUrl ? (
                   <GLTFViewer
