@@ -77,7 +77,7 @@ interface Product {
   stock: number;
   shippingCost: string;
   shippingTime: string;
-  notes: string;
+  notes?: string;
   image: string;
   additionalImages?: string[];
   weight?: number;
