@@ -1,11 +1,34 @@
 "use client";
 
-import { useRef, useState, useMemo, useCallback, useEffect } from "react";
+import { useRef, useState, useMemo, useCallback, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei/core/OrbitControls";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import * as THREE from "three";
+import { ErrorBoundary } from "react-error-boundary";
 import { FILAMENT_COLORS, SIZE_OPTIONS } from "./STLViewerInteractive";
+
+// Loading component for Suspense
+function LoadingFallback() {
+  return (
+    <mesh>
+      <boxGeometry args={[0.5, 0.5, 0.5]} />
+      <meshStandardMaterial color="#4A9FD4" wireframe />
+    </mesh>
+  );
+}
+
+// Error fallback component
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#1e2739" }}>
+      <div className="text-center p-4">
+        <p style={{ color: "#E8EDF5" }}>Unable to load 3D model</p>
+        <p className="text-sm mt-2" style={{ color: "#9BA8BE" }}>{error.message}</p>
+      </div>
+    </div>
+  );
+}
 
 interface ModelProps {
   url: string;
@@ -248,10 +271,11 @@ export default function STLViewerCompositeGorilla({
     setIsRotating((prev) => !prev);
   }, []);
 
-  const currentColor = FILAMENT_COLORS[colorIndex];
+  const currentColor = FILAMENT_COLORS[colorIndex] || FILAMENT_COLORS[0];
   const currentSize = SIZE_OPTIONS[sizeIndex];
 
   return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
     <div className={`relative ${className}`} style={{ minHeight: "100%", height: "100%" }}>
       {isLoading && (
         <div
@@ -277,16 +301,18 @@ export default function STLViewerCompositeGorilla({
         <directionalLight position={[0, 5, -5]} intensity={0.5} />
         <hemisphereLight args={["#ffffff", "#444444", 0.4]} />
 
-        <CompositeGorillaScene
-          bodyUrl="/models/gorilla_body_web.stl"
-          headUrl="/models/gorilla_head_web.stl"
-          gorillaColor={currentColor.hex}
-          gorillaColor2={currentColor.hex2}
-          gorillaColor3={currentColor.hex3}
-          isRotating={isRotating}
-          scale={1.0}
-          isMetallic={currentColor.metallic}
-        />
+        <Suspense fallback={<LoadingFallback />}>
+          <CompositeGorillaScene
+            bodyUrl="/models/gorilla_body_web.stl"
+            headUrl="/models/gorilla_head_web.stl"
+            gorillaColor={currentColor.hex}
+            gorillaColor2={currentColor.hex2}
+            gorillaColor3={currentColor.hex3}
+            isRotating={isRotating}
+            scale={1.0}
+            isMetallic={currentColor.metallic}
+          />
+        </Suspense>
 
         <OrbitControls
           enableZoom={true}
@@ -336,5 +362,6 @@ export default function STLViewerCompositeGorilla({
         </span>
       </div>
     </div>
+    </ErrorBoundary>
   );
 }
